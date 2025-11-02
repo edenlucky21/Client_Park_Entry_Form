@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Park Entry Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eaf4ea;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #2b5d34;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #2b5d34;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      width: 100%;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3e7b4b;
+    }
+  </style>
+</head>
+<body>
+  <h2>Park Entry Form</h2>
+  <form action="https://formsubmit.co/YOUR_EMAIL" method="POST">
+    <label>Full Name:</label>
+    <input type="text" name="Full Name" required>
+
+    <label>Nationality:</label>
+    <input type="text" name="Nationality" required>
+
+    <label>Phone Number:</label>
+    <input type="tel" name="Phone Number" required>
+
+    <label>Number of Nights:</label>
+    <input type="number" name="Nights" required>
+
+    <label>Accommodation:</label>
+    <input type="text" name="Accommodation" required>
+
+    <label>Activities:</label>
+    <textarea name="Activities" rows="3" required></textarea>
+
+    <label>Expectations:</label>
+    <textarea name="Expectations" rows="3"></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
