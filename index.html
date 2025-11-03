@@ -1,240 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Park Entry Form</title>
-  <style>
-    body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  max-width: 600px;
-  width: 90%;
-  margin: 20px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-form label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-form input, form select, form textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  background-color: #006400;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  margin-top: 15px;
-  width: 100%;
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  .container {
-    width: 95%;
-    padding: 15px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Park Entry Form</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    padding: 20px;
+    margin: 0;
   }
-}
-  </style>
+
+  .container {
+    max-width: 600px;
+    background: #fff;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    text-align: center;
+    color: #006400;
+  }
+
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .checkbox-group {
+    margin-top: 10px;
+  }
+
+  button {
+    background-color: #006400;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  button:hover {
+    background-color: #228B22;
+  }
+</style>
 </head>
 <body>
+<div class="container">
+  <h2>Park Entry Form</h2>
 
-  <form id="parkForm">
-    <h2>Visitor Type</h2>
-    <label for="visitorType">Select your category:</label>
-    <select id="visitorType" name="visitorType" onchange="showSection()">
-      <option value="">-- Choose Type --</option>
-      <option value="tourist">Tourist</option>
-      <option value="transit">Transit</option>
-      <option value="students">Students</option>
+  <!-- Visitor Type Selection -->
+  <label for="visitorType">Select Visitor Type:</label>
+  <select id="visitorType" onchange="showSection()">
+    <option value="">-- Choose Option --</option>
+    <option value="tourist">Tourist</option>
+    <option value="transit">Transit</option>
+    <option value="student">Student</option>
+  </select>
+
+  <!-- Tourist Form -->
+  <form id="touristForm" class="hidden">
+    <label>Name:</label>
+    <input type="text" name="tourist_name">
+
+    <label>Nationality:</label>
+    <select name="tourist_nationality">
+      <option value="">--Select Country--</option>
     </select>
 
-    <!-- Tourist Section -->
-    <div id="tourist" class="section">
-      <h2>Tourist Information</h2>
+    <label>Company:</label>
+    <input type="text" name="company" placeholder="Enter company or 'Private'">
 
-      <label>Full Name:</label>
-      <input type="text" name="touristName" required>
+    <label>Category:</label>
+    <select name="tourist_category">
+      <option value="EAC">East African Citizen (EAC)</option>
+      <option value="FR">Foreign Resident (FR)</option>
+      <option value="FNR">Foreign Non-Resident (FNR)</option>
+      <option value="ROA">Rest of Africa (ROA)</option>
+    </select>
 
-      <label>Nationality:</label>
-      <select name="touristNationality" id="countryList"></select>
+    <label>Accommodation:</label>
+    <select name="tourist_accommodation" onchange="checkOtherAccommodation(this)">
+      <option value="Para Safari Lodge">Para Safari Lodge</option>
+      <option value="Red Chilli Rest Camp">Red Chilli Rest Camp</option>
+      <option value="Heritage Safari Lodge">Heritage Safari Lodge</option>
+      <option value="Other">Other (Specify Below)</option>
+    </select>
+    <input type="text" id="otherAccommodation" class="hidden" placeholder="Specify accommodation">
 
-      <label>Category:</label>
-      <select name="touristCategory">
-        <option value="EAC">East African Citizen (EAC)</option>
-        <option value="FR">Foreign Resident (FR)</option>
-        <option value="FNR">Foreign Non-Resident (FNR)</option>
-        <option value="ROA">Rest of Africa (ROA)</option>
-      </select>
-
-      <!-- 🧾 New field: Specify company or select Private -->
-      <label>Company:</label>
-      <select id="companySelect" name="company" onchange="toggleCompanyInput()">
-        <option value="">-- Choose --</option>
-        <option value="Private">Private</option>
-        <option value="Other">Other (Specify Company)</option>
-      </select>
-
-      <div id="companyInputDiv" style="display:none;">
-        <label>Specify Company Name:</label>
-        <input type="text" name="companyName" placeholder="Enter company name">
-      </div>
-
-      <label>Accommodation:</label>
-      <select name="accommodation" id="accommodationSelect" onchange="showOtherAccommodation()">
-        <option value="">-- Choose Accommodation --</option>
-        <option value="Lodge">Lodge</option>
-        <option value="Camp">Camp</option>
-        <option value="Hotel">Hotel</option>
-        <option value="Other">Other (Specify)</option>
-      </select>
-
-      <div id="otherAccommodationDiv" style="display:none;">
-        <label>Specify Accommodation:</label>
-        <input type="text" name="otherAccommodation" placeholder="Enter accommodation type">
-      </div>
-
-      <label>Activities:</label>
-      <div class="activity-group">
-        <input type="checkbox" name="activity" value="Game Drive"> Game Drive<br>
-        <input type="checkbox" name="activity" value="Nature Walk"> Nature Walk<br>
-        <input type="checkbox" name="activity" value="Bird Watching"> Bird Watching<br>
-        <input type="checkbox" name="activity" value="Camping"> Camping<br>
-
-        <label><b>Boat Cruise:</b></label>
-        <div class="activity-group">
-          <input type="checkbox" name="activity" value="Boat Cruise - UWA"> UWA<br>
-          <input type="checkbox" name="activity" value="Boat Cruise - Wild Frontiers Safaris"> Wild Frontiers Safaris<br>
-          <input type="checkbox" name="activity" value="Boat Cruise - Marasa Safari Lodge"> Marasa Safari Lodge<br>
-          <input type="checkbox" name="activity" value="Boat Cruise - Murchison River Lodge"> Murchison River Lodge<br>
-        </div>
-
-        <input type="checkbox" name="activity" value="Sport Fishing"> Sport Fishing<br>
-        <input type="checkbox" name="activity" value="Top of Falls Viewing"> Top of Falls Viewing<br>
-        <input type="checkbox" name="activity" value="Top of Falls Hiking"> Top of Falls Hiking<br>
-      </div>
+    <label>Activities:</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="activity" value="Game Drive"> Game Drive</label>
+      <label><input type="checkbox" name="activity" value="Boat Cruise - UWA"> Boat Cruise (UWA)</label>
+      <label><input type="checkbox" name="activity" value="Boat Cruise - Wild Frontiers Safaris"> Boat Cruise (Wild Frontiers Safaris)</label>
+      <label><input type="checkbox" name="activity" value="Boat Cruise - Marasa Safari Lodge"> Boat Cruise (Marasa Safari Lodge)</label>
+      <label><input type="checkbox" name="activity" value="Boat Cruise - Murchison River Lodge"> Boat Cruise (Murchison River Lodge)</label>
+      <label><input type="checkbox" name="activity" value="Sport Fishing"> Sport Fishing</label>
+      <label><input type="checkbox" name="activity" value="Top of Falls Viewing"> Top of Falls Viewing</label>
+      <label><input type="checkbox" name="activity" value="Top of Falls Hiking"> Top of Falls Hiking</label>
     </div>
 
-    <!-- Transit Section -->
-    <div id="transit" class="section">
-      <h2>Transit Visitor Information</h2>
-      <label>Name:</label>
-      <input type="text" name="transitName">
-
-      <label>Nationality:</label>
-      <select name="transitNationality" id="countryList2"></select>
-
-      <label>Type of Car:</label>
-      <input type="text" name="carType">
-
-      <label>Car Registration Number:</label>
-      <input type="text" name="regNumber">
-
-      <label>Number of Passengers:</label>
-      <input type="number" name="numPassengers" min="1">
-
-      <label>From:</label>
-      <input type="text" name="fromLocation">
-
-      <label>Next Destination:</label>
-      <input type="text" name="nextDestination">
-    </div>
-
-    <!-- Students Section -->
-    <div id="students" class="section">
-      <h2>Students Group Information</h2>
-      <label>Trip Leader Name:</label>
-      <input type="text" name="leaderName">
-
-      <label>Contact:</label>
-      <input type="tel" name="leaderContact">
-
-      <label>Nationality:</label>
-      <select name="leaderNationality" id="countryList3"></select>
-
-      <label>Name of School:</label>
-      <input type="text" name="schoolName">
-
-      <label>Number of Students:</label>
-      <input type="number" name="numStudents" min="1">
-
-      <label>Students’ Nationality:</label>
-      <select name="studentsNationality" id="countryList4"></select>
-    </div>
-
-    <br>
     <button type="submit">Submit</button>
   </form>
 
-  <script>
-    // Show the right section depending on type
-    function showSection() {
-      let type = document.getElementById("visitorType").value;
-      document.querySelectorAll(".section").forEach(sec => sec.style.display = "none");
-      if (type) document.getElementById(type).style.display = "block";
-    }
+  <!-- Transit Form -->
+  <form id="transitForm" class="hidden">
+    <label>Name:</label>
+    <input type="text" name="transit_name">
 
-    // Show text box if accommodation = Other
-    function showOtherAccommodation() {
-      let select = document.getElementById("accommodationSelect");
-      let otherDiv = document.getElementById("otherAccommodationDiv");
-      if (select.value === "Other") {
-        otherDiv.style.display = "block";
-      } else {
-        otherDiv.style.display = "none";
-      }
-    }
+    <label>Nationality:</label>
+    <select name="transit_nationality">
+      <option value="">--Select Country--</option>
+    </select>
 
-    // Show company input if Other is selected
-    function toggleCompanyInput() {
-      let companySelect = document.getElementById("companySelect");
-      let inputDiv = document.getElementById("companyInputDiv");
-      if (companySelect.value === "Other") {
-        inputDiv.style.display = "block";
-      } else {
-        inputDiv.style.display = "none";
-      }
-    }
+    <label>Type of Car:</label>
+    <input type="text" name="car_type">
 
-    // Populate all country dropdowns
-    const countries = [
-      "Uganda", "Kenya", "Tanzania", "Rwanda", "Burundi", "South Sudan",
-      "DR Congo", "Ethiopia", "Nigeria", "South Africa", "United States",
-      "United Kingdom", "Germany", "France", "China", "India", "Canada",
-      "Australia", "Japan", "Italy", "Spain"
-    ];
+    <label>Registration Number:</label>
+    <input type="text" name="car_reg">
 
-    function populateCountries() {
-      const ids = ["countryList", "countryList2", "countryList3", "countryList4"];
-      ids.forEach(id => {
-        let select = document.getElementById(id);
-        countries.forEach(country => {
-          let opt = document.createElement("option");
-          opt.value = country;
-          opt.textContent = country;
-          select.appendChild(opt);
-        });
-      });
-    }
-    populateCountries();
-  </script>
+    <label>Number of Passengers:</label>
+    <input type="number" name="passengers">
+
+    <label>From:</label>
+    <input type="text" name="from">
+
+    <label>Next Destination:</label>
+    <input type="text" name="destination">
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- Student Form -->
+  <form id="studentForm" class="hidden">
+    <label>Trip Leader Name:</label>
+    <input type="text" name="leader_name">
+
+    <label>Contact:</label>
+    <input type="text" name="leader_contact">
+
+    <label>Nationality:</label>
+    <select name="leader_nationality">
+      <option value="">--Select Country--</option>
+    </select>
+
+    <label>Name of School:</label>
+    <input type="text" name="school">
+
+    <label>Number of Students:</label>
+    <input type="number" name="num_students">
+
+    <label>Nationality of Students:</label>
+    <select name="student_nationality">
+      <option value="">--Select Country--</option>
+    </select>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<script>
+// Function to show only selected section
+function showSection() {
+  const type = document.getElementById("visitorType").value;
+  document.getElementById("touristForm").classList.add("hidden");
+  document.getElementById("transitForm").classList.add("hidden");
+  document.getElementById("studentForm").classList.add("hidden");
+
+  if (type === "tourist") document.getElementById("touristForm").classList.remove("hidden");
+  if (type === "transit") document.getElementById("transitForm").classList.remove("hidden");
+  if (type === "student") document.getElementById("studentForm").classList.remove("hidden");
+}
+
+// Function to show "Other" accommodation input
+function checkOtherAccommodation(select) {
+  const input = document.getElementById("otherAccommodation");
+  input.classList.toggle("hidden", select.value !== "Other");
+}
+</script>
 
 </body>
 </html>
