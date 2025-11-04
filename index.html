@@ -63,6 +63,20 @@
   button:hover {
     background-color: #228B22;
   }
+  .activities-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.activities-section label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+}
+
 </style>
 </head>
 <body>
@@ -121,17 +135,17 @@
     </select>
     <input type="text" id="otherAccommodation" class="hidden" placeholder="Specify accommodation">
 
-    <label>Activities:</label>
-    <div class="checkbox-group">
-      <label><input type="checkbox" name="activity" value="Game Drive"> Game Drive</label>
-      <label><input type="checkbox" name="activity" value="Boat Cruise - UWA"> Boat Cruise (UWA)</label>
-      <label><input type="checkbox" name="activity" value="Boat Cruise - Wild Frontiers Safaris"> Boat Cruise (Wild Frontiers Safaris)</label>
-      <label><input type="checkbox" name="activity" value="Boat Cruise - Marasa Safari Lodge"> Boat Cruise (Marasa Safari Lodge)</label>
-      <label><input type="checkbox" name="activity" value="Boat Cruise - Murchison River Lodge"> Boat Cruise (Murchison River Lodge)</label>
-      <label><input type="checkbox" name="activity" value="Sport Fishing"> Sport Fishing</label>
-      <label><input type="checkbox" name="activity" value="Top of Falls Viewing"> Top of Falls Viewing</label>
-      <label><input type="checkbox" name="activity" value="Top of Falls Hiking"> Top of Falls Hiking</label>
-    </div>
+    <h3>Activities:</h3>
+<div class="activities-section">
+  <label><input type="checkbox" name="activities" value="Game Drive"> Game Drive</label>
+  <label><input type="checkbox" name="activities" value="Boat Cruise (UWA)"> Boat Cruise (UWA)</label>
+  <label><input type="checkbox" name="activities" value="Boat Cruise (Wild Frontiers Safaris)"> Boat Cruise (Wild Frontiers Safaris)</label>
+  <label><input type="checkbox" name="activities" value="Boat Cruise (Marasa Safari Lodge)"> Boat Cruise (Marasa Safari Lodge)</label>
+  <label><input type="checkbox" name="activities" value="Boat Cruise (Murchison River Lodge)"> Boat Cruise (Murchison River Lodge)</label>
+  <label><input type="checkbox" name="activities" value="Top of Falls Viewing"> Top of Falls Viewing</label>
+  <label><input type="checkbox" name="activities" value="Top of Falls Hiking"> Top of Falls Hiking</label>
+  <label><input type="checkbox" name="activities" value="Sport Fishing"> Sport Fishing</label>
+</div>
 
 <!-- Driver Details -->
 <h3>Driver Information</h3>
@@ -214,6 +228,7 @@
 </div>
 
 <script>
+  
 // Function to show only selected section
 function showSection() {
   const type = document.getElementById("visitorType").value;
