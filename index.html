@@ -88,8 +88,19 @@
       <option value="">--Select Country--</option>
     </select>
 
-    <label>Company:</label>
-    <input type="text" name="company" placeholder="Enter company or 'Private'">
+   <!-- Company Field -->
+<label for="company">Tour Company:</label>
+<select id="companyOption" name="companyOption" onchange="toggleCompanyInput()" required>
+  <option value="">-- Select Option --</option>
+  <option value="Private">Private</option>
+  <option value="Company">Tour Company</option>
+</select>
+
+<div id="companyNameDiv" style="display:none; margin-top: 8px;">
+  <label for="companyName">Company Name:</label>
+  <input type="text" id="companyName" name="companyName" placeholder="Enter company name">
+</div>
+
 
     <label>Category:</label>
     <select name="tourist_category">
@@ -119,6 +130,27 @@
       <label><input type="checkbox" name="activity" value="Top of Falls Viewing"> Top of Falls Viewing</label>
       <label><input type="checkbox" name="activity" value="Top of Falls Hiking"> Top of Falls Hiking</label>
     </div>
+
+<!-- Driver Details -->
+<h3>Driver Information</h3>
+
+<label for="driverName">Driver's Name:</label>
+<input type="text" id="driverName" name="driverName" placeholder="Enter driver’s name" required>
+
+<label for="driverPhone">Driver's Phone Number:</label>
+<input type="tel" id="driverPhone" name="driverPhone" placeholder="Enter driver’s phone number" required>
+
+<label for="driverLicense">Driver's Licence Number:</label>
+<input type="text" id="driverLicense" name="driverLicense" placeholder="Enter licence number" required>
+
+    <label>Type of Car:</label>
+    <input type="text" name="car_type">
+
+    <label>Registration Number:</label>
+    <input type="text" name="car_reg">
+
+    <label>Number of Passengers:</label>
+    <input type="number" name="passengers">
 
     <button type="submit">Submit</button>
   </form>
