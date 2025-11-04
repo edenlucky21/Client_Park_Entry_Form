@@ -63,20 +63,7 @@
   button:hover {
     background-color: #228B22;
   }
-  .activities-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.activities-section label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 15px;
-}
-
+  
 </style>
 </head>
 <body>
@@ -135,7 +122,23 @@
     </select>
     <input type="text" id="otherAccommodation" class="hidden" placeholder="Specify accommodation">
 
-    <h3>Activities:</h3>
+    <style>
+.activities-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.activities-section label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+}
+</style>
+
+<h3>Activities:</h3>
 <div class="activities-section">
   <label><input type="checkbox" name="activities" value="Game Drive"> Game Drive</label>
   <label><input type="checkbox" name="activities" value="Boat Cruise (UWA)"> Boat Cruise (UWA)</label>
