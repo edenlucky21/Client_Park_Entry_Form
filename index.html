@@ -122,33 +122,104 @@
     </select>
     <input type="text" id="otherAccommodation" class="hidden" placeholder="Specify accommodation">
 
-    <style>
-.activities-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
+    <!-- Put this CSS in your stylesheet or in a <style> block -->
+<style>
+/* Reset any accidental rotation/writing-mode */
+.activities-section,
+.activities-section * {
+  transform: none !important;
+  writing-mode: horizontal-tb !important;
 }
 
+/* Responsive grid - auto fit columns */
+.activities-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px 18px;
+  align-items: start;
+  margin-top: 12px;
+}
+
+/* Each label is a row with checkbox + text aligned center */
 .activities-section label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  background: transparent; /* change to match your form background if needed */
+  box-sizing: border-box;
   font-size: 15px;
+  line-height: 1.2;
+}
+
+/* Larger, consistent checkbox for easier tapping on mobile */
+.activities-section input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Ensure label text wraps (long names) */
+.activities-section label span {
+  white-space: normal;
+  display: inline-block;
+}
+
+/* Optional: visually highlight on hover/focus for clarity */
+.activities-section label:hover,
+.activities-section label:focus-within {
+  background: rgba(0,0,0,0.03);
 }
 </style>
 
+<!-- Replace your current Activities HTML with this -->
 <h3>Activities:</h3>
-<div class="activities-section">
-  <label><input type="checkbox" name="activities" value="Game Drive"> Game Drive</label>
-  <label><input type="checkbox" name="activities" value="Boat Cruise (UWA)"> Boat Cruise (UWA)</label>
-  <label><input type="checkbox" name="activities" value="Boat Cruise (Wild Frontiers Safaris)"> Boat Cruise (Wild Frontiers Safaris)</label>
-  <label><input type="checkbox" name="activities" value="Boat Cruise (Marasa Safari Lodge)"> Boat Cruise (Marasa Safari Lodge)</label>
-  <label><input type="checkbox" name="activities" value="Boat Cruise (Murchison River Lodge)"> Boat Cruise (Murchison River Lodge)</label>
-  <label><input type="checkbox" name="activities" value="Top of Falls Viewing"> Top of Falls Viewing</label>
-  <label><input type="checkbox" name="activities" value="Top of Falls Hiking"> Top of Falls Hiking</label>
-  <label><input type="checkbox" name="activities" value="Sport Fishing"> Sport Fishing</label>
-</div>
+<div class="activities-section" role="group" aria-label="Activities">
+  <label>
+    <input type="checkbox" name="activities" value="Game Drive">
+    <span>Game Drive</span>
+  </label>
+
+  <label>
+    <input type="checkbox" name="activities" value="Boat Cruise (UWA)">
+    <span>Boat Cruise (UWA)</span>
+  </label>
+
+  <label>
+    <input type="checkbox" name="activities" value="Boat Cruise (Wild Frontiers Safaris)">
+    <span>Boat Cruise (Wild Frontiers Safaris)</span>
+  </label>
+
+  <label>
+    <input type="checkbox" name="activities" value="Boat Cruise (Marasa Safari Lodge)">
+    <span>Boat Cruise (Marasa Safari Lodge)</span>
+  </label>
+
+  <label>
+    <input type="checkbox" name="activities" value="Boat Cruise (Murchison River Lodge)">
+    <span>Boat Cruise (Murchison River Lodge)</span>
+  </label>
+
+  <label>
+    <input type="checkbox" name="activities" value="Top of Falls Viewing">
+    <span>Top of Falls Viewing</span>
+  </label>
+
+  <label>
+    <input type="checkbox" name="activities" value="Top of Falls Hiking">
+    <span>Top of Falls Hiking</span>
+  </label>
+
+  <label>
+    <input type="checkbox" name="activities" value="Sport Fishing">
+    <span>Sport Fishing</span>
+  </label>
 
 <!-- Driver Details -->
 <h3>Driver Information</h3>
