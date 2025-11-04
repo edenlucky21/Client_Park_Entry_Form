@@ -89,17 +89,19 @@
     </select>
 
    <!-- Company Field -->
-<label for="company">Tour Company:</label>
-<select id="companyOption" name="companyOption" onchange="toggleCompanyInput()" required>
+<label for="companyOption">Tour Company:</label>
+<select id="companyOption" name="companyOption" onchange="onCompanyOptionChange()" required>
   <option value="">-- Select Option --</option>
   <option value="Private">Private</option>
-  <option value="Company">Tour Company</option>
+  <option value="Company">Registered Tour Company</option>
 </select>
 
-<div id="companyNameDiv" style="display:none; margin-top: 8px;">
-  <label for="companyName">Company Name:</label>
-  <input type="text" id="companyName" name="companyName" placeholder="Enter company name">
+<div id="companySelectDiv" style="display:none; margin-top:8px;">
+  <label for="companySelect">Select Tour Company:</label>
+  <input type="text" id="companySelect" name="companySelect" placeholder="Start typing company name…" autocomplete="off">
+  <div id="companyOptionsList" style="border:1px solid #ccc; max-height:120px; overflow-y:auto;"></div>
 </div>
+
 
 
     <label>Category:</label>
@@ -230,17 +232,48 @@ function checkOtherAccommodation(select) {
   input.classList.toggle("hidden", select.value !== "Other");
 }
 
-function toggleCompanyInput() {
-  const companyOption = document.getElementById('companyOption').value;
-  const companyNameDiv = document.getElementById('companyNameDiv');
-  
-  if (companyOption === 'Company') {
-    companyNameDiv.style.display = 'block';
+// Example list of companies — you’ll load this via AJAX from your backend (which fetches UTB list)
+const tourCompanies = [
+  "Matoke Tours Ltd",
+  "Take Off Safaris Uganda Ltd",
+  "Tulavo",
+  "Go Gorilla Trekking",
+  // … (etc)
+];
+
+function onCompanyOptionChange(){
+  const opt = document.getElementById('companyOption').value;
+  const div = document.getElementById('companySelectDiv');
+  if(opt === 'Company'){
+    div.style.display = 'block';
+    document.getElementById('companySelect').required = true;
   } else {
-    companyNameDiv.style.display = 'none';
-    document.getElementById('companyName').value = '';
+    div.style.display = 'none';
+    document.getElementById('companySelect').required = false;
+    document.getElementById('companySelect').value = '';
+    document.getElementById('companyOptionsList').innerHTML = '';
   }
 }
+
+// Autocomplete logic
+document.getElementById('companySelect').addEventListener('input', (e) => {
+  const val = e.target.value.toLowerCase();
+  const listDiv = document.getElementById('companyOptionsList');
+  listDiv.innerHTML = '';
+  if(val.length < 2) return;
+  const matches = tourCompanies.filter(c => c.toLowerCase().includes(val));
+  matches.forEach(match => {
+    const el = document.createElement('div');
+    el.textContent = match;
+    el.style.padding = '4px';
+    el.style.cursor = 'pointer';
+    el.onclick = () => {
+      document.getElementById('companySelect').value = match;
+      listDiv.innerHTML = '';
+    };
+    listDiv.appendChild(el);
+  });
+});
 
 </script>
 
