@@ -1,370 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Park Entry Form</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f8ff;
-    padding: 20px;
-    margin: 0;
-  }
-
-  .container {
-    max-width: 600px;
-    background: #fff;
-    margin: auto;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-
-  h2 {
-    text-align: center;
-    color: #006400;
-  }
-
-  label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .checkbox-group {
-    margin-top: 10px;
-  }
-
-  button {
-    background-color: #006400;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    width: 100%;
-    margin-top: 15px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-
-  button:hover {
-    background-color: #228B22;
-  }
-  
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Park Entry Form</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="container">
-  <h2>Park Entry Form</h2>
+  <div class="container">
+    <h2>Park Entry Form</h2>
 
-  <!-- Visitor Type Selection -->
-  <label for="visitorType">Select Visitor Type:</label>
-  <select id="visitorType" onchange="showSection()">
-    <option value="">-- Choose Option --</option>
-    <option value="tourist">Tourist</option>
-    <option value="transit">Transit</option>
-    <option value="student">Student</option>
-  </select>
-
-  <!-- Tourist Form -->
-  <form id="touristForm" class="hidden">
-    <label>Name:</label>
-    <input type="text" name="tourist_name">
-
-    <label>Nationality:</label>
-    <select name="tourist_nationality">
-      <option value="">--Select Country--</option>
+    <!-- Visitor Type Selection -->
+    <label for="visitorType">Select Visitor Type:</label>
+    <select id="visitorType" onchange="showSection()">
+      <option value="">-- Choose Option --</option>
+      <option value="tourist">Tourist</option>
+      <option value="transit">Transit</option>
+      <option value="student">Student</option>
     </select>
 
-   <!-- Company Field -->
-<label for="companyOption">Tour Company:</label>
-<select id="companyOption" name="companyOption" onchange="onCompanyOptionChange()" required>
-  <option value="">-- Select Option --</option>
-  <option value="Private">Private</option>
-  <option value="Company">Registered Tour Company</option>
-</select>
+    <!-- Tourist Form -->
+    <form id="touristForm" class="hidden">
+      <label>Name:</label>
+      <input type="text" name="tourist_name" />
 
-<div id="companySelectDiv" style="display:none; margin-top:8px;">
-  <label for="companySelect">Select Tour Company:</label>
-  <input type="text" id="companySelect" name="companySelect" placeholder="Start typing company name…" autocomplete="off">
-  <div id="companyOptionsList" style="border:1px solid #ccc; max-height:120px; overflow-y:auto;"></div>
-</div>
+      <label>Nationality:</label>
+      <select name="tourist_nationality">
+        <option value="">--Select Country--</option>
+      </select>
 
+      <!-- Company Field -->
+      <label for="companyOption">Tour Company:</label>
+      <select id="companyOption" name="companyOption" onchange="onCompanyOptionChange()" required>
+        <option value="">-- Select Option --</option>
+        <option value="Private">Private</option>
+        <option value="Company">Registered Tour Company</option>
+      </select>
 
+      <div id="companySelectDiv" style="display:none; margin-top:8px;">
+        <label for="companySelect">Select Tour Company:</label>
+        <input
+          type="text"
+          id="companySelect"
+          name="companySelect"
+          placeholder="Start typing company name…"
+          autocomplete="off"
+        />
+        <div id="companyOptionsList"></div>
+      </div>
 
-    <label>Category:</label>
-    <select name="tourist_category">
-      <option value="EAC">East African Citizen (EAC)</option>
-      <option value="FR">Foreign Resident (FR)</option>
-      <option value="FNR">Foreign Non-Resident (FNR)</option>
-      <option value="ROA">Rest of Africa (ROA)</option>
-    </select>
+      <label>Category:</label>
+      <select name="tourist_category">
+        <option value="EAC">East African Citizen (EAC)</option>
+        <option value="FR">Foreign Resident (FR)</option>
+        <option value="FNR">Foreign Non-Resident (FNR)</option>
+        <option value="ROA">Rest of Africa (ROA)</option>
+      </select>
 
-    <label>Accommodation:</label>
-    <select name="tourist_accommodation" onchange="checkOtherAccommodation(this)">
-      <option value="Para Safari Lodge">Para Safari Lodge</option>
-      <option value="Red Chilli Rest Camp">Red Chilli Rest Camp</option>
-      <option value="Heritage Safari Lodge">Heritage Safari Lodge</option>
-      <option value="Other">Other (Specify Below)</option>
-    </select>
-    <input type="text" id="otherAccommodation" class="hidden" placeholder="Specify accommodation">
+      <label>Accommodation:</label>
+      <select name="tourist_accommodation" onchange="checkOtherAccommodation(this)">
+        <option value="Para Safari Lodge">Para Safari Lodge</option>
+        <option value="Red Chilli Rest Camp">Red Chilli Rest Camp</option>
+        <option value="Heritage Safari Lodge">Heritage Safari Lodge</option>
+        <option value="Other">Other (Specify Below)</option>
+      </select>
+      <input type="text" id="otherAccommodation" class="hidden" placeholder="Specify accommodation" />
 
-    <!-- Put this CSS in your stylesheet or in a <style> block -->
-<style>
-/* Reset any accidental rotation/writing-mode */
-.activities-section,
-.activities-section * {
-  transform: none !important;
-  writing-mode: horizontal-tb !important;
-}
+      <!-- Activities -->
+      <h3>Activities:</h3>
+      <div class="activities-section" role="group" aria-label="Activities">
+        <label><input type="checkbox" name="activities" value="Game Drive" /><span>Game Drive</span></label>
+        <label><input type="checkbox" name="activities" value="Boat Cruise (UWA)" /><span>Boat Cruise (UWA)</span></label>
+        <label><input type="checkbox" name="activities" value="Boat Cruise (Wild Frontiers Safaris)" /><span>Boat Cruise (Wild Frontiers Safaris)</span></label>
+        <label><input type="checkbox" name="activities" value="Boat Cruise (Marasa Safari Lodge)" /><span>Boat Cruise (Marasa Safari Lodge)</span></label>
+        <label><input type="checkbox" name="activities" value="Boat Cruise (Murchison River Lodge)" /><span>Boat Cruise (Murchison River Lodge)</span></label>
+        <label><input type="checkbox" name="activities" value="Top of Falls Viewing" /><span>Top of Falls Viewing</span></label>
+        <label><input type="checkbox" name="activities" value="Top of Falls Hiking" /><span>Top of Falls Hiking</span></label>
+        <label><input type="checkbox" name="activities" value="Sport Fishing" /><span>Sport Fishing</span></label>
+      </div>
 
-/* Responsive grid - auto fit columns */
-.activities-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px 18px;
-  align-items: start;
-  margin-top: 12px;
-}
+      <!-- Driver Details -->
+      <h3>Driver Information</h3>
+      <label for="driverName">Driver's Name:</label>
+      <input type="text" id="driverName" name="driverName" placeholder="Enter driver’s name" required />
 
-/* Each label is a row with checkbox + text aligned center */
-.activities-section label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  user-select: none;
-  background: transparent; /* change to match your form background if needed */
-  box-sizing: border-box;
-  font-size: 15px;
-  line-height: 1.2;
-}
+      <label for="driverPhone">Driver's Phone Number:</label>
+      <input type="tel" id="driverPhone" name="driverPhone" placeholder="Enter driver’s phone number" required />
 
-/* Larger, consistent checkbox for easier tapping on mobile */
-.activities-section input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  min-height: 20px;
-  margin: 0;
-  flex-shrink: 0;
-}
+      <label for="driverLicense">Driver's Licence Number:</label>
+      <input type="text" id="driverLicense" name="driverLicense" placeholder="Enter licence number" required />
 
-/* Ensure label text wraps (long names) */
-.activities-section label span {
-  white-space: normal;
-  display: inline-block;
-}
+      <label>Type of Car:</label>
+      <input type="text" name="car_type" />
 
-/* Optional: visually highlight on hover/focus for clarity */
-.activities-section label:hover,
-.activities-section label:focus-within {
-  background: rgba(0,0,0,0.03);
-}
-</style>
+      <label>Registration Number:</label>
+      <input type="text" name="car_reg" />
 
-<!-- Replace your current Activities HTML with this -->
-<h3>Activities:</h3>
-<div class="activities-section" role="group" aria-label="Activities">
-  <label>
-    <input type="checkbox" name="activities" value="Game Drive">
-    <span>Game Drive</span>
-  </label>
+      <label>Number of Passengers:</label>
+      <input type="number" name="passengers" />
 
-  <label>
-    <input type="checkbox" name="activities" value="Boat Cruise (UWA)">
-    <span>Boat Cruise (UWA)</span>
-  </label>
+      <button type="submit">Submit</button>
+    </form>
 
-  <label>
-    <input type="checkbox" name="activities" value="Boat Cruise (Wild Frontiers Safaris)">
-    <span>Boat Cruise (Wild Frontiers Safaris)</span>
-  </label>
+    <!-- Transit Form -->
+    <form id="transitForm" class="hidden">
+      <label>Name:</label>
+      <input type="text" name="transit_name" />
 
-  <label>
-    <input type="checkbox" name="activities" value="Boat Cruise (Marasa Safari Lodge)">
-    <span>Boat Cruise (Marasa Safari Lodge)</span>
-  </label>
+      <label>Nationality:</label>
+      <select name="transit_nationality">
+        <option value="">--Select Country--</option>
+      </select>
 
-  <label>
-    <input type="checkbox" name="activities" value="Boat Cruise (Murchison River Lodge)">
-    <span>Boat Cruise (Murchison River Lodge)</span>
-  </label>
+      <label>Type of Car:</label>
+      <input type="text" name="car_type" />
 
-  <label>
-    <input type="checkbox" name="activities" value="Top of Falls Viewing">
-    <span>Top of Falls Viewing</span>
-  </label>
+      <label>Registration Number:</label>
+      <input type="text" name="car_reg" />
 
-  <label>
-    <input type="checkbox" name="activities" value="Top of Falls Hiking">
-    <span>Top of Falls Hiking</span>
-  </label>
+      <label>Number of Passengers:</label>
+      <input type="number" name="passengers" />
 
-  <label>
-    <input type="checkbox" name="activities" value="Sport Fishing">
-    <span>Sport Fishing</span>
-  </label>
+      <label>From:</label>
+      <input type="text" name="from" />
 
-<!-- Driver Details -->
-<h3>Driver Information</h3>
+      <label>Next Destination:</label>
+      <input type="text" name="destination" />
 
-<label for="driverName">Driver's Name:</label>
-<input type="text" id="driverName" name="driverName" placeholder="Enter driver’s name" required>
+      <button type="submit">Submit</button>
+    </form>
 
-<label for="driverPhone">Driver's Phone Number:</label>
-<input type="tel" id="driverPhone" name="driverPhone" placeholder="Enter driver’s phone number" required>
+    <!-- Student Form -->
+    <form id="studentForm" class="hidden">
+      <label>Trip Leader Name:</label>
+      <input type="text" name="leader_name" />
 
-<label for="driverLicense">Driver's Licence Number:</label>
-<input type="text" id="driverLicense" name="driverLicense" placeholder="Enter licence number" required>
+      <label>Contact:</label>
+      <input type="text" name="leader_contact" />
 
-    <label>Type of Car:</label>
-    <input type="text" name="car_type">
+      <label>Nationality:</label>
+      <select name="leader_nationality">
+        <option value="">--Select Country--</option>
+      </select>
 
-    <label>Registration Number:</label>
-    <input type="text" name="car_reg">
+      <label>Name of School:</label>
+      <input type="text" name="school" />
 
-    <label>Number of Passengers:</label>
-    <input type="number" name="passengers">
+      <label>Number of Students:</label>
+      <input type="number" name="num_students" />
 
-    <button type="submit">Submit</button>
-  </form>
+      <label>Nationality of Students:</label>
+      <select name="student_nationality">
+        <option value="">--Select Country--</option>
+      </select>
 
-  <!-- Transit Form -->
-  <form id="transitForm" class="hidden">
-    <label>Name:</label>
-    <input type="text" name="transit_name">
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 
-    <label>Nationality:</label>
-    <select name="transit_nationality">
-      <option value="">--Select Country--</option>
-    </select>
-
-    <label>Type of Car:</label>
-    <input type="text" name="car_type">
-
-    <label>Registration Number:</label>
-    <input type="text" name="car_reg">
-
-    <label>Number of Passengers:</label>
-    <input type="number" name="passengers">
-
-    <label>From:</label>
-    <input type="text" name="from">
-
-    <label>Next Destination:</label>
-    <input type="text" name="destination">
-
-    <button type="submit">Submit</button>
-  </form>
-
-  <!-- Student Form -->
-  <form id="studentForm" class="hidden">
-    <label>Trip Leader Name:</label>
-    <input type="text" name="leader_name">
-
-    <label>Contact:</label>
-    <input type="text" name="leader_contact">
-
-    <label>Nationality:</label>
-    <select name="leader_nationality">
-      <option value="">--Select Country--</option>
-    </select>
-
-    <label>Name of School:</label>
-    <input type="text" name="school">
-
-    <label>Number of Students:</label>
-    <input type="number" name="num_students">
-
-    <label>Nationality of Students:</label>
-    <select name="student_nationality">
-      <option value="">--Select Country--</option>
-    </select>
-
-    <button type="submit">Submit</button>
-  </form>
-</div>
-
-<script>
-  
-// Function to show only selected section
-function showSection() {
-  const type = document.getElementById("visitorType").value;
-  document.getElementById("touristForm").classList.add("hidden");
-  document.getElementById("transitForm").classList.add("hidden");
-  document.getElementById("studentForm").classList.add("hidden");
-
-  if (type === "tourist") document.getElementById("touristForm").classList.remove("hidden");
-  if (type === "transit") document.getElementById("transitForm").classList.remove("hidden");
-  if (type === "student") document.getElementById("studentForm").classList.remove("hidden");
-}
-
-// Function to show "Other" accommodation input
-function checkOtherAccommodation(select) {
-  const input = document.getElementById("otherAccommodation");
-  input.classList.toggle("hidden", select.value !== "Other");
-}
-
-// Example list of companies — you’ll load this via AJAX from your backend (which fetches UTB list)
-const tourCompanies = [
-  "Matoke Tours Ltd",
-  "Take Off Safaris Uganda Ltd",
-  "Tulavo",
-  "Go Gorilla Trekking",
-  // … (etc)
-];
-
-function onCompanyOptionChange(){
-  const opt = document.getElementById('companyOption').value;
-  const div = document.getElementById('companySelectDiv');
-  if(opt === 'Company'){
-    div.style.display = 'block';
-    document.getElementById('companySelect').required = true;
-  } else {
-    div.style.display = 'none';
-    document.getElementById('companySelect').required = false;
-    document.getElementById('companySelect').value = '';
-    document.getElementById('companyOptionsList').innerHTML = '';
-  }
-}
-
-// Autocomplete logic
-document.getElementById('companySelect').addEventListener('input', (e) => {
-  const val = e.target.value.toLowerCase();
-  const listDiv = document.getElementById('companyOptionsList');
-  listDiv.innerHTML = '';
-  if(val.length < 2) return;
-  const matches = tourCompanies.filter(c => c.toLowerCase().includes(val));
-  matches.forEach(match => {
-    const el = document.createElement('div');
-    el.textContent = match;
-    el.style.padding = '4px';
-    el.style.cursor = 'pointer';
-    el.onclick = () => {
-      document.getElementById('companySelect').value = match;
-      listDiv.innerHTML = '';
-    };
-    listDiv.appendChild(el);
-  });
-});
-
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
