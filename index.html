@@ -10,7 +10,6 @@
   <div class="container">
     <h2>Park Entry Form</h2>
 
-    <!-- Visitor Type Selection -->
     <label for="visitorType">Select Visitor Type:</label>
     <select id="visitorType" onchange="showSection()">
       <option value="">-- Choose Option --</option>
@@ -20,139 +19,54 @@
     </select>
 
     <!-- Tourist Form -->
-    <form id="touristForm" class="hidden">
-      <label>Name:</label>
-      <input type="text" name="tourist_name" />
+    <form id="touristForm" class="hidden" onsubmit="submitForm(event)">
+      <h3>Group Members (up to 10)</h3>
+      <div id="clientList">
+        <div class="client">
+          <label>Full Name:</label>
+          <input type="text" name="client_name[]" required />
 
-      <label>Nationality:</label>
-      <select name="tourist_nationality">
-        <option value="">--Select Country--</option>
-      </select>
+          <label>Contact:</label>
+          <input type="tel" name="client_contact[]" required />
 
-      <!-- Company Field -->
-      <label for="companyOption">Tour Company:</label>
-      <select id="companyOption" name="companyOption" onchange="onCompanyOptionChange()" required>
-        <option value="">-- Select Option --</option>
-        <option value="Private">Private</option>
-        <option value="Company">Registered Tour Company</option>
-      </select>
-
-      <div id="companySelectDiv" style="display:none; margin-top:8px;">
-        <label for="companySelect">Select Tour Company:</label>
-        <input
-          type="text"
-          id="companySelect"
-          name="companySelect"
-          placeholder="Start typing company name…"
-          autocomplete="off"
-        />
-        <div id="companyOptionsList"></div>
+          <label>Nationality:</label>
+          <select name="client_nationality[]" class="nationality"></select>
+        </div>
       </div>
+      <button type="button" onclick="addClient()">+ Add Another Client</button>
 
-      <label>Category:</label>
-      <select name="tourist_category">
-        <option value="EAC">East African Citizen (EAC)</option>
-        <option value="FR">Foreign Resident (FR)</option>
-        <option value="FNR">Foreign Non-Resident (FNR)</option>
-        <option value="ROA">Rest of Africa (ROA)</option>
-      </select>
+      <label>For Large Groups (Upload Names List):</label>
+      <input type="file" name="group_upload" accept=".pdf,.doc,.docx,.xls,.xlsx" />
 
-      <label>Accommodation:</label>
-      <select name="tourist_accommodation" onchange="checkOtherAccommodation(this)">
-        <option value="Para Safari Lodge">Para Safari Lodge</option>
-        <option value="Red Chilli Rest Camp">Red Chilli Rest Camp</option>
-        <option value="Heritage Safari Lodge">Heritage Safari Lodge</option>
-        <option value="Other">Other (Specify Below)</option>
-      </select>
-      <input type="text" id="otherAccommodation" class="hidden" placeholder="Specify accommodation" />
+      <hr />
 
-      <!-- Activities -->
+      <h3>Vehicle Information (up to 10)</h3>
+      <div id="vehicleList">
+        <div class="vehicle">
+          <label>Type of Car:</label>
+          <input type="text" name="car_type[]" />
+
+          <label>Registration Number:</label>
+          <input type="text" name="car_reg[]" />
+
+          <label>Driver Name:</label>
+          <input type="text" name="driver_name[]" />
+
+          <label>Driver Phone:</label>
+          <input type="tel" name="driver_phone[]" />
+        </div>
+      </div>
+      <button type="button" onclick="addVehicle()">+ Add Another Vehicle</button>
+
+      <hr />
+
       <h3>Activities:</h3>
       <div class="activities-section" role="group" aria-label="Activities">
-        <label><input type="checkbox" name="activities" value="Game Drive" /><span>Game Drive</span></label>
-        <label><input type="checkbox" name="activities" value="Boat Cruise (UWA)" /><span>Boat Cruise (UWA)</span></label>
-        <label><input type="checkbox" name="activities" value="Boat Cruise (Wild Frontiers Safaris)" /><span>Boat Cruise (Wild Frontiers Safaris)</span></label>
-        <label><input type="checkbox" name="activities" value="Boat Cruise (Marasa Safari Lodge)" /><span>Boat Cruise (Marasa Safari Lodge)</span></label>
-        <label><input type="checkbox" name="activities" value="Boat Cruise (Murchison River Lodge)" /><span>Boat Cruise (Murchison River Lodge)</span></label>
-        <label><input type="checkbox" name="activities" value="Top of Falls Viewing" /><span>Top of Falls Viewing</span></label>
-        <label><input type="checkbox" name="activities" value="Top of Falls Hiking" /><span>Top of Falls Hiking</span></label>
-        <label><input type="checkbox" name="activities" value="Sport Fishing" /><span>Sport Fishing</span></label>
+        <label><input type="checkbox" name="activities" value="Game Drive" /> Game Drive</label>
+        <label><input type="checkbox" name="activities" value="Boat Cruise" /> Boat Cruise</label>
+        <label><input type="checkbox" name="activities" value="Top of Falls Viewing" /> Top of Falls Viewing</label>
+        <label><input type="checkbox" name="activities" value="Sport Fishing" /> Sport Fishing</label>
       </div>
-
-      <!-- Driver Details -->
-      <h3>Driver Information</h3>
-      <label for="driverName">Driver's Name:</label>
-      <input type="text" id="driverName" name="driverName" placeholder="Enter driver’s name" required />
-
-      <label for="driverPhone">Driver's Phone Number:</label>
-      <input type="tel" id="driverPhone" name="driverPhone" placeholder="Enter driver’s phone number" required />
-
-      <label for="driverLicense">Driver's Licence Number:</label>
-      <input type="text" id="driverLicense" name="driverLicense" placeholder="Enter licence number" required />
-
-      <label>Type of Car:</label>
-      <input type="text" name="car_type" />
-
-      <label>Registration Number:</label>
-      <input type="text" name="car_reg" />
-
-      <label>Number of Passengers:</label>
-      <input type="number" name="passengers" />
-
-      <button type="submit">Submit</button>
-    </form>
-
-    <!-- Transit Form -->
-    <form id="transitForm" class="hidden">
-      <label>Name:</label>
-      <input type="text" name="transit_name" />
-
-      <label>Nationality:</label>
-      <select name="transit_nationality">
-        <option value="">--Select Country--</option>
-      </select>
-
-      <label>Type of Car:</label>
-      <input type="text" name="car_type" />
-
-      <label>Registration Number:</label>
-      <input type="text" name="car_reg" />
-
-      <label>Number of Passengers:</label>
-      <input type="number" name="passengers" />
-
-      <label>From:</label>
-      <input type="text" name="from" />
-
-      <label>Next Destination:</label>
-      <input type="text" name="destination" />
-
-      <button type="submit">Submit</button>
-    </form>
-
-    <!-- Student Form -->
-    <form id="studentForm" class="hidden">
-      <label>Trip Leader Name:</label>
-      <input type="text" name="leader_name" />
-
-      <label>Contact:</label>
-      <input type="text" name="leader_contact" />
-
-      <label>Nationality:</label>
-      <select name="leader_nationality">
-        <option value="">--Select Country--</option>
-      </select>
-
-      <label>Name of School:</label>
-      <input type="text" name="school" />
-
-      <label>Number of Students:</label>
-      <input type="number" name="num_students" />
-
-      <label>Nationality of Students:</label>
-      <select name="student_nationality">
-        <option value="">--Select Country--</option>
-      </select>
 
       <button type="submit">Submit</button>
     </form>

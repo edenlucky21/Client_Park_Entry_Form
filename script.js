@@ -1,66 +1,85 @@
-// Show form based on visitor type
 function showSection() {
   const type = document.getElementById("visitorType").value;
-  document.getElementById("touristForm").classList.add("hidden");
-  document.getElementById("transitForm").classList.add("hidden");
-  document.getElementById("studentForm").classList.add("hidden");
-
-  if (type === "tourist")
-    document.getElementById("touristForm").classList.remove("hidden");
-  if (type === "transit")
-    document.getElementById("transitForm").classList.remove("hidden");
-  if (type === "student")
-    document.getElementById("studentForm").classList.remove("hidden");
+  document.getElementById("touristForm").classList.toggle("hidden", type !== "tourist");
 }
 
-// Show "Other" accommodation field
-function checkOtherAccommodation(select) {
-  const input = document.getElementById("otherAccommodation");
-  input.classList.toggle("hidden", select.value !== "Other");
+// Add client fields
+let clientCount = 1;
+function addClient() {
+  if (clientCount >= 10) return alert("Maximum 10 clients allowed!");
+  clientCount++;
+
+  const div = document.createElement("div");
+  div.className = "client";
+  div.innerHTML = `
+    <label>Full Name:</label>
+    <input type="text" name="client_name[]" required />
+    <label>Contact:</label>
+    <input type="tel" name="client_contact[]" required />
+    <label>Nationality:</label>
+    <select name="client_nationality[]" class="nationality"></select>
+  `;
+  document.getElementById("clientList").appendChild(div);
+  loadCountries();
 }
 
-// Tour companies (sample)
-const tourCompanies = [
-  "Matoke Tours Ltd",
-  "Take Off Safaris Uganda Ltd",
-  "Tulavo",
-  "Go Gorilla Trekking",
-  "Wild Frontiers Safaris",
-  "Marasa Safari Lodge",
-  "Murchison River Lodge"
-];
+// Add vehicle fields
+let vehicleCount = 1;
+function addVehicle() {
+  if (vehicleCount >= 10) return alert("Maximum 10 vehicles allowed!");
+  vehicleCount++;
 
-// Handle tour company option
-function onCompanyOptionChange() {
-  const opt = document.getElementById("companyOption").value;
-  const div = document.getElementById("companySelectDiv");
+  const div = document.createElement("div");
+  div.className = "vehicle";
+  div.innerHTML = `
+    <label>Type of Car:</label>
+    <input type="text" name="car_type[]" />
+    <label>Registration Number:</label>
+    <input type="text" name="car_reg[]" />
+    <label>Driver Name:</label>
+    <input type="text" name="driver_name[]" />
+    <label>Driver Phone:</label>
+    <input type="tel" name="driver_phone[]" />
+  `;
+  document.getElementById("vehicleList").appendChild(div);
+}
 
-  if (opt === "Company") {
-    div.style.display = "block";
-    document.getElementById("companySelect").required = true;
+// Load countries dynamically
+async function loadCountries() {
+  const response = await fetch("https://restcountries.com/v3.1/all");
+  const data = await response.json();
+  const countries = data.map(c => c.name.common).sort();
+
+  document.querySelectorAll(".nationality").forEach(select => {
+    if (select.options.length <= 1) {
+      countries.forEach(country => {
+        const opt = document.createElement("option");
+        opt.value = country;
+        opt.textContent = country;
+        select.appendChild(opt);
+      });
+    }
+  });
+}
+loadCountries();
+
+// Submit form to server and print
+async function submitForm(event) {
+  event.preventDefault();
+  const form = event.target;
+  const formData = new FormData(form);
+
+  const response = await fetch("http://localhost:5000/submit", {
+    method: "POST",
+    body: formData
+  });
+
+  if (response.ok) {
+    const blob = await response.blob();
+    const pdfUrl = URL.createObjectURL(blob);
+    window.open(pdfUrl, "_blank"); // open PDF receipt
+    form.reset();
   } else {
-    div.style.display = "none";
-    document.getElementById("companySelect").required = false;
-    document.getElementById("companySelect").value = "";
-    document.getElementById("companyOptionsList").innerHTML = "";
+    alert("Error submitting form.");
   }
 }
-
-// Autocomplete company field
-document.getElementById("companySelect").addEventListener("input", (e) => {
-  const val = e.target.value.toLowerCase();
-  const listDiv = document.getElementById("companyOptionsList");
-  listDiv.innerHTML = "";
-  if (val.length < 2) return;
-
-  const matches = tourCompanies.filter((c) => c.toLowerCase().includes(val));
-  matches.forEach((match) => {
-    const el = document.createElement("div");
-    el.textContent = match;
-    el.onclick = () => {
-      document.getElementById("companySelect").value = match;
-      listDiv.innerHTML = "";
-    };
-    listDiv.appendChild(el);
-  });
-});
