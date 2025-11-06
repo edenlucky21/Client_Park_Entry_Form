@@ -10,7 +10,7 @@
   <div class="container">
     <h2>Park Entry Form</h2>
 
-    <label for="visitorType">Select Visitor Type:</label>
+    <label for="visitorType"><b>Select Visitor Category:</b></label>
     <select id="visitorType" onchange="showSection()">
       <option value="">-- Choose Option --</option>
       <option value="tourist">Tourist</option>
@@ -19,8 +19,10 @@
     </select>
 
     <!-- Tourist Form -->
-    <form id="touristForm" class="hidden" onsubmit="submitForm(event)">
-      <h3>Group Members (up to 10)</h3>
+    <form id="touristForm" class="hidden" onsubmit="submitForm(event)" enctype="multipart/form-data">
+      <h3>Tourist Information</h3>
+      <h4>Group Members (up to 10)</h4>
+
       <div id="clientList">
         <div class="client">
           <label>Full Name:</label>
@@ -30,9 +32,12 @@
           <input type="tel" name="client_contact[]" required />
 
           <label>Nationality:</label>
-          <select name="client_nationality[]" class="nationality"></select>
+          <select name="client_nationality[]" class="nationality">
+            <option value="">Select Country</option>
+          </select>
         </div>
       </div>
+
       <button type="button" onclick="addClient()">+ Add Another Client</button>
 
       <label>For Large Groups (Upload Names List):</label>
@@ -67,6 +72,41 @@
         <label><input type="checkbox" name="activities" value="Top of Falls Viewing" /> Top of Falls Viewing</label>
         <label><input type="checkbox" name="activities" value="Sport Fishing" /> Sport Fishing</label>
       </div>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <!-- Transit Form -->
+    <form id="transitForm" class="hidden" onsubmit="submitForm(event)">
+      <h3>Transit Visitor Information</h3>
+      <label>Full Name:</label>
+      <input type="text" name="transit_name" required />
+
+      <label>Vehicle Registration:</label>
+      <input type="text" name="transit_reg" required />
+
+      <label>Nationality:</label>
+      <select name="transit_nationality" class="nationality">
+        <option value="">Select Country</option>
+      </select>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <!-- Student Form -->
+    <form id="studentForm" class="hidden" onsubmit="submitForm(event)">
+      <h3>Student Visitor Information</h3>
+
+      <label>Full Name:</label>
+      <input type="text" name="student_name" required />
+
+      <label>Institution:</label>
+      <input type="text" name="institution" required />
+
+      <label>Nationality:</label>
+      <select name="student_nationality" class="nationality">
+        <option value="">Select Country</option>
+      </select>
 
       <button type="submit">Submit</button>
     </form>
