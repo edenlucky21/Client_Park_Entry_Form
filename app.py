@@ -9,7 +9,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app)
 
 # Create database if not exists
@@ -123,5 +123,5 @@ def submit():
     return send_file(pdf_buffer, mimetype="application/pdf", as_attachment=False, download_name="park_entry_receipt.pdf")
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(debug=True)
