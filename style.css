@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-  max-width: 700px;
+  max-width: 800px;
   background: #fff;
   margin: auto;
   padding: 20px;
@@ -14,46 +14,20 @@ body {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-h2, h3 {
+.logo-container {
   text-align: center;
-  color: #006400;
+  margin-bottom: 10px;
 }
+.uwa-logo { width: 100px; height: auto; display:block; margin: 0 auto 6px; }
 
-label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
-}
+h2, h3, h4 { text-align:center; color:#006400; margin:4px 0; }
 
-input, select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.hidden { display: none; }
-
-button {
-  background-color: #006400;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  width: 100%;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #228b22;
-}
-
-.client, .vehicle {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 8px;
-  background: #f9f9f9;
-}
+label { display:block; margin-top:10px; font-weight:bold; }
+input, select, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:8px; }
+.hidden { display:none; }
+button { background-color:#006400; color:#fff; border:none; border-radius:10px; padding:10px; width:100%; margin-top:10px; cursor:pointer;}
+button:hover { background-color:#228b22; }
+.client, .vehicle { border:1px solid #ddd; padding:10px; margin-top:10px; border-radius:8px; background:#f9f9f9; }
+.activities-section { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+.activities-section label { background:rgba(0,100,0,0.05); padding:6px 8px; border-radius:6px; cursor:pointer; }
+.submitBtn { width: 48%; display:inline-block; margin-right:4%; }
