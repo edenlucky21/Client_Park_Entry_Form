@@ -9,7 +9,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.styles import getSampleStyleSheet
 
-app = Flask(_name_, static_folder='uploads')
+app = Flask(__name__, static_folder='uploads')
 CORS(app)
 
 DB = "park_entry.db"
@@ -177,29 +177,88 @@ def submit():
 
 
 # Simple dashboard to view entries (for admin)
-@app.route("/view_entries")
-def view_entries():
+@app.route("/print/<int:entry_id>")
+def print_entry(entry_id):
     conn = sqlite3.connect(DB)
     cur = conn.cursor()
-    cur.execute("SELECT id, category, client_name, client_contact, client_nationality, car_reg, activities, group_file, created_at FROM entries ORDER BY id DESC")
-    rows = cur.fetchall()
+    cur.execute("SELECT * FROM entries WHERE id=?", (entry_id,))
+    row = cur.fetchone()
     conn.close()
 
+    if not row:
+        return "Entry not found", 404
+
+    # Extract data
+    (id, category, name, contact, nationality, car_type, car_reg,
+     driver_name, driver_phone, activities, group_file, created_at) = row
+
+    # Generate PDF again
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
+    styles = getSampleStyleSheet()
+    story = []
+
+    story.append(Paragraph("<b>Uganda Wildlife Authority</b>", styles["Title"]))
+    story.append(Paragraph("Murchison Falls National Park", styles["Normal"]))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph(f"<b>PARK ENTRY RECEIPT - {category.title()}</b>", styles["Heading2"]))
+    story.append(Spacer(1, 8))
+
+    # Client info
+    client_data = [["Client Name", "Contact", "Nationality"],
+                   [name, contact, nationality]]
+    tbl = Table(client_data, colWidths=[200, 120, 120])
+    tbl.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), colors.lightgreen),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold")
+    ]))
+    story.append(tbl)
+    story.append(Spacer(1, 10))
+
+    # Vehicle info
+    vehicle_data = [["Car Type", "Reg. Number", "Driver Name", "Driver Phone"],
+                    [car_type, car_reg, driver_name, driver_phone]]
+    vtbl = Table(vehicle_data, colWidths=[120, 100, 160, 100])
+    vtbl.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold")
+    ]))
+    story.append(Paragraph("<b>Vehicle Details</b>", styles["Heading3"]))
+    story.append(vtbl)
+    story.append(Spacer(1, 10))
+
+    story.append(Paragraph(f"<b>Activities:</b> {activities}", styles["Normal"]))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph(f"Date Created: {created_at}", styles["Normal"]))
+    story.append(Paragraph("Thank you for visiting Uganda Wildlife Authority!", styles["Normal"]))
+    doc.build(story)
+    buffer.seek(0)
+
+    return send_file(buffer, mimetype="application/pdf", as_attachment=False,
+                     download_name=f"receipt_{entry_id}.pdf")
+
     html = """
-    <h2>Entries</h2>
-    <table border="1" cellpadding="6" cellspacing="0">
-      <tr><th>ID</th><th>Category</th><th>Name</th><th>Contact</th><th>Nationality</th><th>Car Reg</th><th>Activities</th><th>Group File</th><th>Created</th></tr>
-      {% for r in rows %}
-      <tr>
-        <td>{{r[0]}}</td><td>{{r[1]}}</td><td>{{r[2]}}</td><td>{{r[3]}}</td><td>{{r[4]}}</td><td>{{r[5]}}</td>
-        <td>{{r[6]}}</td>
-        <td>{% if r[7] %}<a href="/uploads/{{r[7]}}" target="_blank">Download</a>{% else %}-{% endif %}</td>
-        <td>{{r[8]}}</td>
-      </tr>
-      {% endfor %}
-    </table>
-    """
+<h2>Entries</h2>
+<table border="1" cellpadding="6" cellspacing="0">
+  <tr>
+    <th>ID</th><th>Category</th><th>Name</th><th>Contact</th>
+    <th>Nationality</th><th>Car Reg</th><th>Activities</th>
+    <th>Group File</th><th>Created</th><th>Action</th>
+  </tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{r[0]}}</td><td>{{r[1]}}</td><td>{{r[2]}}</td><td>{{r[3]}}</td>
+    <td>{{r[4]}}</td><td>{{r[5]}}</td><td>{{r[6]}}</td>
+    <td>{% if r[7] %}<a href="/uploads/{{r[7]}}" target="_blank">Download</a>{% else %}-{% endif %}</td>
+    <td>{{r[8]}}</td>
+    <td><a href="/print/{{r[0]}}" target="_blank">🖨 Print</a></td>
+  </tr>
+  {% endfor %}
+</table>
+"""
     return render_template_string(html, rows=rows)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
