@@ -1,264 +1,83 @@
-# server.py
-from flask import Flask, request, send_file, jsonify, render_template_string, safe_join
+from flask import Flask, request, jsonify, send_file, render_template
 from flask_cors import CORS
-import sqlite3, os, datetime
-from io import BytesIO
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import inch
+import sqlite3, io, datetime
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import A4
 
-app = Flask(__name__, static_folder='uploads')
+app = Flask(_name_)
 CORS(app)
 
-DB = "park_entry.db"
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
+# ----------------- DATABASE SETUP -----------------
 def init_db():
-    conn = sqlite3.connect(DB)
-    cur = conn.cursor()
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS entries (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        category TEXT,
-        client_name TEXT,
-        client_contact TEXT,
-        client_nationality TEXT,
-        car_type TEXT,
-        car_reg TEXT,
-        driver_name TEXT,
-        driver_phone TEXT,
-        activities TEXT,
-        group_file TEXT,
-        created_at TEXT
-    )
-    """)
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS forms (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    form_type TEXT,
+                    data TEXT,
+                    date_submitted TEXT
+                )''')
     conn.commit()
     conn.close()
 
 init_db()
 
-@app.route("/submit", methods=["POST"])
-def submit():
-    form = request.form
-    files = request.files
-    category = form.get("form_type", "tourist")
+# ----------------- FORM SUBMISSION -----------------
+@app.route("/submit_form", methods=["POST"])
+def submit_form():
+    form_type = request.form.get("form_type")
+    data = dict(request.form)
+    del data["form_type"]
 
-    # Collect lists (safe even if not present)
-    client_names = form.getlist("client_name[]")
-    contacts = form.getlist("client_contact[]")
-    nationalities = form.getlist("client_nationality[]")
-
-    car_types = form.getlist("car_type[]")
-    car_regs = form.getlist("car_reg[]")
-    driver_names = form.getlist("driver_name[]")
-    driver_phones = form.getlist("driver_phone[]")
-
-    # For transit/student single fields
-    if category == "transit":
-        client_names = [form.get("transit_name", "")]
-        contacts = [""]
-        nationalities = [form.get("transit_nationality", "")]
-        car_regs = [form.get("transit_reg", "")]
-        car_types = [form.get("transit_reg", "")]
-    if category == "student":
-        client_names = [form.get("student_name", "")]
-        contacts = [""]
-        nationalities = [form.get("student_nationality", "")]
-        # other fields remain blank
-
-    activities = ", ".join(form.getlist("activities"))
-
-    # Handle uploaded group file
-    group_file = files.get("group_upload")
-    saved_group_filename = None
-    if group_file and group_file.filename:
-        # sanitize filename in simple way
-        safe_name = f"{datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')}{group_file.filename.replace(' ', '')}"
-        path = os.path.join(UPLOAD_DIR, safe_name)
-        group_file.save(path)
-        saved_group_filename = safe_name
-
-    # Save entries: if multiple clients, create a row for each (or at least first)
-    conn = sqlite3.connect(DB)
-    cur = conn.cursor()
-    now = datetime.datetime.utcnow().isoformat()
-    max_rows = max(1, len(client_names))
-    for i in range(max_rows):
-        cn = client_names[i] if i < len(client_names) else ""
-        ct = contacts[i] if i < len(contacts) else ""
-        nat = nationalities[i] if i < len(nationalities) else ""
-        car = car_types[i] if i < len(car_types) else (car_types[0] if car_types else "")
-        reg = car_regs[i] if i < len(car_regs) else (car_regs[0] if car_regs else "")
-        drv = driver_names[i] if i < len(driver_names) else (driver_names[0] if driver_names else "")
-        drvphone = driver_phones[i] if i < len(driver_phones) else (driver_phones[0] if driver_phones else "")
-
-        cur.execute("""
-        INSERT INTO entries (category, client_name, client_contact, client_nationality, car_type, car_reg, driver_name, driver_phone, activities, group_file, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (category, cn, ct, nat, car, reg, drv, drvphone, activities, saved_group_filename, now))
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute("INSERT INTO forms (form_type, data, date_submitted) VALUES (?, ?, ?)",
+              (form_type, str(data), str(datetime.datetime.now())))
     conn.commit()
     conn.close()
 
-    # Build PDF receipt
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
-    styles = getSampleStyleSheet()
-    story = []
+    # Generate instant PDF receipt
+    pdf_buffer = io.BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=A4)
+    elements = []
+    elements.append(Paragraph("<b>UGANDA WILDLIFE AUTHORITY</b>", None))
+    elements.append(Spacer(1, 12))
+    elements.append(Paragraph(f"<b>Visitor Category:</b> {form_type.title()}", None))
+    elements.append(Spacer(1, 12))
 
-    # Add logo if exists
-    logo_path = os.path.join(os.getcwd(), "uwa_logo.png")
-    if os.path.exists(logo_path):
-        try:
-            im = Image(logo_path, width=80, height=80)
-            story.append(im)
-        except Exception as e:
-            # ignore image errors
-            print("Logo error:", e)
-
-    story.append(Spacer(1, 6))
-    story.append(Paragraph("<b>Uganda Wildlife Authority</b>", styles["Title"]))
-    story.append(Paragraph("Murchison Falls National Park", styles["Normal"]))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph(f"<b>PARK ENTRY RECEIPT - {category.title()}</b>", styles["Heading2"]))
-    story.append(Spacer(1, 8))
-
-    # Clients table
-    client_data = [["Client Name", "Contact", "Nationality"]]
-    for i in range(len(client_names)):
-        client_data.append([client_names[i], contacts[i] if i < len(contacts) else "", nationalities[i] if i < len(nationalities) else ""])
-    if len(client_data) == 1:
-        client_data.append(["-", "-", "-"])
-
-    tbl = Table(client_data, colWidths=[200, 120, 120])
-    tbl.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), colors.lightgreen),
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold")
+    table_data = [["Field", "Value"]] + [[k, v] for k, v in data.items()]
+    table = Table(table_data)
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), colors.grey),
+        ("TEXTCOLOR", (0,0), (-1,0), colors.whitesmoke),
+        ("GRID", (0,0), (-1,-1), 1, colors.black),
     ]))
-    story.append(tbl)
-    story.append(Spacer(1, 10))
+    elements.append(table)
+    doc.build(elements)
+    pdf_buffer.seek(0)
 
-    # Vehicles table (if any)
-    if any(car_types) or any(car_regs):
-        vehicle_data = [["Car Type", "Reg. Number", "Driver Name", "Driver Phone"]]
-        max_v = max(len(car_types), len(car_regs), len(driver_names), len(driver_phones))
-        for i in range(max_v):
-            vehicle_data.append([
-                car_types[i] if i < len(car_types) else "",
-                car_regs[i] if i < len(car_regs) else "",
-                driver_names[i] if i < len(driver_names) else "",
-                driver_phones[i] if i < len(driver_phones) else ""
-            ])
-        vtbl = Table(vehicle_data, colWidths=[120, 100, 160, 100])
-        vtbl.setStyle(TableStyle([
-            ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
-            ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-            ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold")
-        ]))
-        story.append(Paragraph("<b>Vehicle Details</b>", styles["Heading3"]))
-        story.append(vtbl)
-        story.append(Spacer(1, 10))
+    return send_file(pdf_buffer, as_attachment=True, download_name="park_entry_receipt.pdf", mimetype="application/pdf")
 
-    # Activities
-    story.append(Paragraph(f"<b>Activities:</b> {activities}", styles["Normal"]))
-    story.append(Spacer(1, 12))
-    if saved_group_filename:
-        story.append(Paragraph(f"Group upload file: {saved_group_filename}", styles["Normal"]))
-        story.append(Spacer(1, 6))
-
-    story.append(Paragraph("Thank you for visiting Uganda Wildlife Authority!", styles["Normal"]))
-    doc.build(story)
-    buffer.seek(0)
-
-    return send_file(buffer, mimetype="application/pdf", as_attachment=False, download_name="park_entry_receipt.pdf")
-
-
-# Simple dashboard to view entries (for admin)
-@app.route("/print/<int:entry_id>")
-def print_entry(entry_id):
-    conn = sqlite3.connect(DB)
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM entries WHERE id=?", (entry_id,))
-    row = cur.fetchone()
+# ----------------- ADMIN DASHBOARD -----------------
+@app.route("/admin")
+def admin():
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute("SELECT id, form_type, date_submitted FROM forms ORDER BY id DESC")
+    records = c.fetchall()
     conn.close()
+    return render_template("admin.html", records=records)
 
-    if not row:
-        return "Entry not found", 404
+# ----------------- VIEW SINGLE RECORD -----------------
+@app.route("/view/<int:form_id>")
+def view_form(form_id):
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM forms WHERE id=?", (form_id,))
+    record = c.fetchone()
+    conn.close()
+    return jsonify(record)
 
-    # Extract data
-    (id, category, name, contact, nationality, car_type, car_reg,
-     driver_name, driver_phone, activities, group_file, created_at) = row
-
-    # Generate PDF again
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
-    styles = getSampleStyleSheet()
-    story = []
-
-    story.append(Paragraph("<b>Uganda Wildlife Authority</b>", styles["Title"]))
-    story.append(Paragraph("Murchison Falls National Park", styles["Normal"]))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph(f"<b>PARK ENTRY RECEIPT - {category.title()}</b>", styles["Heading2"]))
-    story.append(Spacer(1, 8))
-
-    # Client info
-    client_data = [["Client Name", "Contact", "Nationality"],
-                   [name, contact, nationality]]
-    tbl = Table(client_data, colWidths=[200, 120, 120])
-    tbl.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), colors.lightgreen),
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold")
-    ]))
-    story.append(tbl)
-    story.append(Spacer(1, 10))
-
-    # Vehicle info
-    vehicle_data = [["Car Type", "Reg. Number", "Driver Name", "Driver Phone"],
-                    [car_type, car_reg, driver_name, driver_phone]]
-    vtbl = Table(vehicle_data, colWidths=[120, 100, 160, 100])
-    vtbl.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
-        ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold")
-    ]))
-    story.append(Paragraph("<b>Vehicle Details</b>", styles["Heading3"]))
-    story.append(vtbl)
-    story.append(Spacer(1, 10))
-
-    story.append(Paragraph(f"<b>Activities:</b> {activities}", styles["Normal"]))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph(f"Date Created: {created_at}", styles["Normal"]))
-    story.append(Paragraph("Thank you for visiting Uganda Wildlife Authority!", styles["Normal"]))
-    doc.build(story)
-    buffer.seek(0)
-
-    return send_file(buffer, mimetype="application/pdf", as_attachment=False,
-                     download_name=f"receipt_{entry_id}.pdf")
-
-    html = """
-<h2>Entries</h2>
-<table border="1" cellpadding="6" cellspacing="0">
-  <tr>
-    <th>ID</th><th>Category</th><th>Name</th><th>Contact</th>
-    <th>Nationality</th><th>Car Reg</th><th>Activities</th>
-    <th>Group File</th><th>Created</th><th>Action</th>
-  </tr>
-  {% for r in rows %}
-  <tr>
-    <td>{{r[0]}}</td><td>{{r[1]}}</td><td>{{r[2]}}</td><td>{{r[3]}}</td>
-    <td>{{r[4]}}</td><td>{{r[5]}}</td><td>{{r[6]}}</td>
-    <td>{% if r[7] %}<a href="/uploads/{{r[7]}}" target="_blank">Download</a>{% else %}-{% endif %}</td>
-    <td>{{r[8]}}</td>
-    <td><a href="/print/{{r[0]}}" target="_blank">🖨 Print</a></td>
-  </tr>
-  {% endfor %}
-</table>
-"""
-    return render_template_string(html, rows=rows)
-
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(host="0.0.0.0", port=5000, debug=True)
