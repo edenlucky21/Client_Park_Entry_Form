@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
   <title>Park Entry Form</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
   <div class="container">
     <div class="logo-container">
-      <img src="UWA.png" alt="Conserving for Generations" class="uwa-logo" />
-      <h2>UGANDA WILDLIFE AUTHORITY</h2>
-      <h3>Park Entry Registration Form</h3>
+      <img src="/static/UWA.png" alt="UWA" class="uwa-logo" />
+      <h1>UGANDA WILDLIFE AUTHORITY</h1>
+      <h2>Park Entry Registration</h2>
     </div>
 
     <label for="visitorType"><b>Select Visitor Category:</b></label>
@@ -23,87 +23,73 @@
     </select>
 
     <!-- TOURIST FORM -->
-    <form id="touristForm" class="hidden" action="/submit_form" method="POST" enctype="multipart/form-data">
+    <form id="touristForm" class="hidden form-card" action="/submit_form" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="form_type" value="tourist" />
       <h3>Tourist Information</h3>
 
       <div id="clientList">
         <div class="client">
-          <label>Full Name:</label>
-          <input type="text" name="client_name[]" required />
-
-          <label>Contact:</label>
-          <input type="tel" name="client_contact[]" required />
-
+          <label>Full Name:</label><input type="text" name="client_name[]" required />
+          <label>Contact:</label><input type="tel" name="client_contact[]" required />
           <label>Visitor Type</label>
           <select name="visitor_type" required>
-              <option value="">-- Select Visitor Type --</option>
-              <option value="FNR">Foreign Non-Resident (FNR)</option>
-              <option value="FR">Foreign Resident (FR)</option>
-              <option value="ROA">Rest of Africa (ROA)</option>
-              <option value="EAC">East African Community (EAC)</option>
-              <option value="CHILD">Child</option>
+            <option value="">-- Select Visitor Type --</option>
+            <option value="FNR">Foreign Non-Resident (FNR)</option>
+            <option value="FR">Foreign Resident (FR)</option>
+            <option value="ROA">Rest of Africa (ROA)</option>
+            <option value="EAC">East African Community (EAC)</option>
+            <option value="CHILD">Child</option>
           </select>
-
           <label>Nationality:</label>
-          <select name="nationality" class="nationality-dropdown" required>
+          <select name="client_nationality[]" class="nationality-dropdown" required>
             <option value="">--Select Nationality--</option>
           </select>
         </div>
       </div>
-
-      <button type="button" id="addClientBtn">+ Add Another Client</button>
-
-      <label>For Large Groups (Upload Names List):</label>
-      <input type="file" name="group_upload" accept=".csv,.xls,.xlsx,.pdf,.doc,.docx" />
-
-      <hr />
+      <div class="row">
+        <button type="button" id="addClientBtn" class="btn">+ Add Another Client</button>
+        <label>For Large Groups (Upload CSV):</label>
+        <input type="file" name="group_upload" accept=".csv,.xls,.xlsx" />
+      </div>
 
       <h3>Vehicle Information</h3>
       <div id="vehicleList">
         <div class="vehicle">
-          <label>Type of Car:</label>
-          <input type="text" name="car_type[]" />
-
-          <label>Registration Number:</label>
-          <input type="text" name="car_reg[]" />
-
-          <label>Driver Name:</label>
-          <input type="text" name="driver_name[]" />
-
-          <label>Driver Phone:</label>
-          <input type="tel" name="driver_phone[]" />
+          <label>Type of Car:</label><input type="text" name="car_type[]" />
+          <label>Registration Number:</label><input type="text" name="car_reg[]" />
+          <label>Driver Name:</label><input type="text" name="driver_name[]" />
+          <label>Driver Phone:</label><input type="tel" name="driver_phone[]" />
         </div>
       </div>
-      <button type="button" id="addVehicleBtn">+ Add Another Vehicle</button>
+      <button type="button" id="addVehicleBtn" class="btn">+ Add Another Vehicle</button>
 
-      <hr />
-
-      <h3>Activities:</h3>
+      <h3>Activities</h3>
       <div class="activities-section">
-        <label><input type="checkbox" name="activities" value="Game Drive" /> Game Drive</label>
-        <label><input type="checkbox" name="activities" value="Boat Cruise" /> Boat Cruise</label>
-        <label><input type="checkbox" name="activities" value="Top of Falls Viewing" /> Top of Falls Viewing</label>
-        <label><input type="checkbox" name="activities" value="Sport Fishing" /> Sport Fishing</label>
+        <label class="chk"><input type="checkbox" name="activities" value="Game Drive" /> Game Drive</label>
+        <label class="chk"><input type="checkbox" name="activities" value="Boat Cruise" /> Boat Cruise</label>
+        <label class="chk"><input type="checkbox" name="activities" value="Top of Falls Viewing" /> Top of Falls Viewing</label>
+        <label class="chk"><input type="checkbox" name="activities" value="Sport Fishing" /> Sport Fishing</label>
       </div>
 
       <button type="submit" class="submitBtn">Submit</button>
     </form>
 
     <!-- TRANSIT FORM -->
-    <form id="transitForm" class="hidden" action="/submit_form" method="POST">
+    <form id="transitForm" class="hidden form-card" action="/submit_form" method="POST">
       <input type="hidden" name="form_type" value="transit" />
       <h3>Transit Visitor Information</h3>
-
-      <label>Full Name:</label>
-      <input type="text" name="transit_name" required />
-
-      <label>Contact:</label>
-      <input type="tel" name="transit_contact" required />
-
-      <label>Vehicle Registration:</label>
-      <input type="text" name="transit_reg" required />
-
+      <label>Full Name:</label><input type="text" name="transit_name" required />
+      <label>Contact:</label><input type="tel" name="transit_contact" required />
+      <label>Vehicle Registration:</label><input type="text" name="transit_reg" required />
+      <label>Visitor Type</label>
+      <select name="visitor_type" required>
+        <option value="">-- Select Visitor Type --</option>
+        <option value="FNR">Foreign Non-Resident (FNR)</option>
+        <option value="FR">Foreign Resident (FR)</option>
+        <option value="ROA">Rest of Africa (ROA)</option>
+        <option value="EAC">East African Community (EAC)</option>
+        <option value="CHILD">Child</option>
+      </select>
       <label>Nationality:</label>
       <select id="transit_nationality" name="nationality" class="nationality-dropdown" required>
         <option value="">--Select Nationality--</option>
@@ -113,73 +99,32 @@
     </form>
 
     <!-- STUDENT FORM -->
-    <form id="studentForm" class="hidden" action="/submit_form" method="POST">
+    <form id="studentForm" class="hidden form-card" action="/submit_form" method="POST">
       <input type="hidden" name="form_type" value="student" />
       <h3>Student Visitor Information</h3>
-
-      <label>School Name:</label>
-      <input type="text" name="student_name" required />
-
-      <label>Address:</label>
-      <input type="text" name="institution" required />
-
-      <label>Contact:</label>
-      <input type="tel" name="student_contact" required />
-
+      <label>School Name:</label><input type="text" name="student_name" required />
+      <label>Institution Address:</label><input type="text" name="institution" required />
+      <label>Contact:</label><input type="tel" name="student_contact" required />
+      <label>Visitor Type</label>
+      <select name="visitor_type" required>
+        <option value="">-- Select Visitor Type --</option>
+        <option value="FNR">Foreign Non-Resident (FNR)</option>
+        <option value="FR">Foreign Resident (FR)</option>
+        <option value="ROA">Rest of Africa (ROA)</option>
+        <option value="EAC">East African Community (EAC)</option>
+        <option value="CHILD">Child</option>
+      </select>
       <label>Nationality:</label>
       <select id="student_nationality" name="nationality" class="nationality-dropdown" required>
         <option value="">--Select Nationality--</option>
       </select>
-
+      
       <button type="submit" class="submitBtn">Submit</button>
     </form>
+
+    <p class="admin-link"><a href="/admin" target="_blank">Open Admin Dashboard</a></p>
   </div>
 
-  <!-- COUNTRY LOADING SCRIPT -->
-  <script>
-    const countries = [
-      "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia",
-      "Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium",
-      "Belize","Benin","Bhutan","Bolivia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso",
-      "Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad",
-      "Chile","China","Colombia","Comoros","Congo (Brazzaville)","Congo (Kinshasa)","Costa Rica",
-      "Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic",
-      "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
-      "Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada",
-      "Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India",
-      "Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan",
-      "Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya",
-      "Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta",
-      "Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco",
-      "Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal",
-      "Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia",
-      "Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru",
-      "Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda",
-      "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa",
-      "San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles",
-      "Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa",
-      "South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland",
-      "Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad and Tobago",
-      "Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates",
-      "United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela",
-      "Vietnam","Yemen","Zambia","Zimbabwe"
-    ];
-
-    // Load into ALL nationality dropdowns
-    function loadNationalities() {
-      document.querySelectorAll(".nationality-dropdown").forEach(select => {
-        countries.forEach(country => {
-          const opt = document.createElement("option");
-          opt.value = country;
-          opt.textContent = country;
-          select.appendChild(opt);
-        });
-      });
-    }
-
-    loadNationalities();
-  </script>
-
-  <script src="script.js"></script>
+  <script src="/static/script.js"></script>
 </body>
 </html>
