@@ -22,11 +22,10 @@
       <option value="student">Student</option>
     </select>
 
-    <!-- Tourist Form -->
+    <!-- TOURIST FORM -->
     <form id="touristForm" class="hidden" action="/submit_form" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="form_type" value="tourist" />
       <h3>Tourist Information</h3>
-      
 
       <div id="clientList">
         <div class="client">
@@ -37,57 +36,19 @@
           <input type="tel" name="client_contact[]" required />
 
           <label>Visitor Type</label>
-            <select name="visitor_type" required>
+          <select name="visitor_type" required>
               <option value="">-- Select Visitor Type --</option>
               <option value="FNR">Foreign Non-Resident (FNR)</option>
               <option value="FR">Foreign Resident (FR)</option>
               <option value="ROA">Rest of Africa (ROA)</option>
               <option value="EAC">East African Community (EAC)</option>
               <option value="CHILD">Child</option>
-            </select>
+          </select>
 
+          <label>Nationality:</label>
           <select name="nationality" class="nationality-dropdown" required>
-    <option value="">--Select Nationality--</option>
-</select>
-
-<script>
-const countries = [
-  "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia",
-  "Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium",
-  "Belize","Benin","Bhutan","Bolivia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso",
-  "Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad",
-  "Chile","China","Colombia","Comoros","Congo (Brazzaville)","Congo (Kinshasa)","Costa Rica",
-  "Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic",
-  "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
-  "Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada",
-  "Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India",
-  "Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan",
-  "Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya",
-  "Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta",
-  "Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco",
-  "Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal",
-  "Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia",
-  "Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru",
-  "Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda",
-  "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa",
-  "San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles",
-  "Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa",
-  "South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland",
-  "Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad and Tobago",
-  "Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates",
-  "United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela",
-  "Vietnam","Yemen","Zambia","Zimbabwe"
-];
-
-document.querySelectorAll('.nationality-dropdown').forEach(select => {
-  countries.forEach(country => {
-    const opt = document.createElement("option");
-    opt.value = country;
-    opt.textContent = country;
-    select.appendChild(opt);
-  });
-});
-</script>
+            <option value="">--Select Nationality--</option>
+          </select>
         </div>
       </div>
 
@@ -119,7 +80,7 @@ document.querySelectorAll('.nationality-dropdown').forEach(select => {
       <hr />
 
       <h3>Activities:</h3>
-      <div class="activities-section" role="group" aria-label="Activities">
+      <div class="activities-section">
         <label><input type="checkbox" name="activities" value="Game Drive" /> Game Drive</label>
         <label><input type="checkbox" name="activities" value="Boat Cruise" /> Boat Cruise</label>
         <label><input type="checkbox" name="activities" value="Top of Falls Viewing" /> Top of Falls Viewing</label>
@@ -129,49 +90,95 @@ document.querySelectorAll('.nationality-dropdown').forEach(select => {
       <button type="submit" class="submitBtn">Submit</button>
     </form>
 
-    <!-- Transit Form -->
+    <!-- TRANSIT FORM -->
     <form id="transitForm" class="hidden" action="/submit_form" method="POST">
       <input type="hidden" name="form_type" value="transit" />
       <h3>Transit Visitor Information</h3>
+
       <label>Full Name:</label>
       <input type="text" name="transit_name" required />
 
       <label>Contact:</label>
-      <input type="tel" name="client_contact[]" required />
-
+      <input type="tel" name="transit_contact" required />
 
       <label>Vehicle Registration:</label>
       <input type="text" name="transit_reg" required />
 
-      <label for="nationality">Nationality:</label>
-<select id="nationality" name="nationality" required>
-  <option value="">--Select your nationality--</option>
-  
+      <label>Nationality:</label>
+      <select id="transit_nationality" name="nationality" class="nationality-dropdown" required>
+        <option value="">--Select Nationality--</option>
+      </select>
+
       <button type="submit" class="submitBtn">Submit</button>
     </form>
 
-    <!-- Student Form -->
-    <form id="studentForm" class="hidden">
+    <!-- STUDENT FORM -->
+    <form id="studentForm" class="hidden" action="/submit_form" method="POST">
       <input type="hidden" name="form_type" value="student" />
       <h3>Student Visitor Information</h3>
 
-      <label>school Name:</label>
+      <label>School Name:</label>
       <input type="text" name="student_name" required />
 
       <label>Address:</label>
       <input type="text" name="institution" required />
 
       <label>Contact:</label>
-      <input type="tel" name="client_contact[]" required />
+      <input type="tel" name="student_contact" required />
 
+      <label>Nationality:</label>
+      <select id="student_nationality" name="nationality" class="nationality-dropdown" required>
+        <option value="">--Select Nationality--</option>
+      </select>
 
-      <label for="nationality">Nationality:</label>
-<select id="nationality" name="nationality" required>
-  <option value="">--Select your nationality--</option>
-  
       <button type="submit" class="submitBtn">Submit</button>
     </form>
   </div>
+
+  <!-- COUNTRY LOADING SCRIPT -->
+  <script>
+    const countries = [
+      "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia",
+      "Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium",
+      "Belize","Benin","Bhutan","Bolivia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso",
+      "Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad",
+      "Chile","China","Colombia","Comoros","Congo (Brazzaville)","Congo (Kinshasa)","Costa Rica",
+      "Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic",
+      "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
+      "Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada",
+      "Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India",
+      "Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan",
+      "Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya",
+      "Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta",
+      "Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco",
+      "Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal",
+      "Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia",
+      "Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru",
+      "Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda",
+      "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa",
+      "San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles",
+      "Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa",
+      "South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland",
+      "Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad and Tobago",
+      "Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates",
+      "United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela",
+      "Vietnam","Yemen","Zambia","Zimbabwe"
+    ];
+
+    // Load into ALL nationality dropdowns
+    function loadNationalities() {
+      document.querySelectorAll(".nationality-dropdown").forEach(select => {
+        countries.forEach(country => {
+          const opt = document.createElement("option");
+          opt.value = country;
+          opt.textContent = country;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    loadNationalities();
+  </script>
 
   <script src="script.js"></script>
 </body>

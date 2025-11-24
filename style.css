@@ -1,74 +1,39 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f8ff;
-  padding: 20px;
-  margin: 0;
+:root{
+  --uwa-green:#0b6623;
+  --uwa-light:#f3f7f3;
+  --accent:#2e8b57;
+  --muted:#666;
+  --max-width:980px;
 }
-
-.container {
-  max-width: 800px;
-  background: #fff;
-  margin: auto;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.logo-container {
-  text-align: center;
-  margin-bottom: 10px;
-}
-.uwa-logo { width: 100px; 
-    height: auto; 
-    display:block; 
-    margin: 0 auto 6px; 
-}
-
-h2, h3, h4 { text-align:center;
-     color:#006400; 
-     margin:4px 0;
-}
-
-label { display:block; 
-    margin-top:10px;
-    font-weight:bold; 
-}
-input, select, textarea { width:100%; 
-    padding:8px; margin-top:5px; 
-    border:1px solid #ccc; 
-    border-radius:7px; 
-}
-.hidden { display:none; 
-}
-button { background-color:#006400; 
-    color:#fff; border:none; 
-    border-radius:10px; padding:10px; 
-    width:100%; margin-top:10px; cursor:pointer;
-}
-
-button:hover { background-color:#228b22; 
-}
-
-.client, .vehicle { border:1px solid #ddd; 
-    padding:10px; 
-    margin-top:10px; 
-    border-radius:8px; 
-    background:#f9f9f9; 
-}
-
-.activities-section { display:flex; 
-    flex-wrap:wrap; 
-    gap:10px; 
-    margin-top:12px; 
-}
-
-.activities-section label { background:rgba(0,100,0,0.05); 
-    padding:6px 8px; 
-    border-radius:6px; 
-    cursor:pointer; 
-}
-
-.submitBtn { width: 48%; 
-    display:inline-block; 
-    margin-right:4%; 
+*{box-sizing:border-box}
+body{font-family:system-ui,Arial,Helvetica,sans-serif;background:var(--uwa-light);margin:0;padding:20px;color:#222;}
+.container{max-width:var(--max-width);margin:0 auto;background:white;padding:18px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.06);}
+.logo-container{text-align:center;margin-bottom:12px;}
+.uwa-logo{height:60px;display:block;margin:0 auto 6px;}
+h1{margin:0;color:var(--uwa-green)}
+h2{margin:4px 0 12px;font-weight:600;color:var(--muted)}
+label{display:block;margin-top:8px;font-size:14px}
+input[type="text"], input[type="tel"], select, input[type="date"]{padding:8px;border:1px solid #ddd;border-radius:6px;width:100%;max-width:420px}
+.form-card{padding:12px;border-radius:8px;border:1px solid #eee;margin-top:12px;background:#fff}
+.btn{background:var(--uwa-green);color:#fff;padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
+.submitBtn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:6px;border:none;margin-top:12px;cursor:pointer}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.client, .vehicle{border:1px dashed #e6efe6;padding:10px;border-radius:6px;margin-bottom:8px}
+.activities-section{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+/* nice checkbox */
+.chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:6px 8px;border-radius:6px;border:1px solid #eef;margin-right:6px}
+.chk input{width:18px;height:18px;appearance:none;border-radius:4px;border:2px solid #cfd;border:2px solid #cbd;padding:0;position:relative}
+.chk input:checked{background:var(--uwa-green);border-color:var(--uwa-green)}
+.chk input:checked::after{content:"";position:absolute;width:6px;height:10px;border:2px solid white;border-left:0;border-top:0;transform:translate(4px,1px) rotate(45deg)}
+/* table */
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{border:1px solid #e6efe6;padding:8px;text-align:left}
+th{background:var(--uwa-green);color:white}
+/* admin controls */
+.admin-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.stats-card{padding:10px;border-radius:6px;background:#f7fff7;border:1px solid #e6efe6;margin-bottom:12px}
+/* responsive */
+@media (max-width:700px){
+  .row{flex-direction:column}
+  .admin-controls{flex-direction:column;align-items:stretch}
 }

@@ -1,48 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Submitted Form Details</title>
+  <meta charset="utf-8" />
+  <title>Submitted Form</title>
+  <link rel="stylesheet" href="/static/style.css" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h2 { color: #0b6623; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #aaa; padding: 8px; }
-    th { background: #0b6623; color: white; }
-    .print-btn {
-        padding: 10px 20px;
-        background: #0b6623;
-        color: white;
-        border: none;
-        cursor: pointer;
-        margin-top: 20px;
-    }
+    @media print { .no-print { display: none; } }
+    .print-btn { background:#0b6623; color:white; padding:8px 12px; border:none; cursor:pointer; }
   </style>
-  <script>
-    function printPage() {
-        window.print();
-    }
-  </script>
 </head>
 <body>
+  <div class="container">
+    <h2>Park Entry Form Details</h2>
+    <table>
+      <tr><th>ID</th><td>{{ record[0] }}</td></tr>
+      <tr><th>Category</th><td>{{ record[1] }}</td></tr>
+      <tr><th>Visitor Type</th><td>{{ record[2] }}</td></tr>
+      <tr><th>Date</th><td>{{ record[4] }}</td></tr>
+      {% for k, v in record_data.items() %}
+      <tr>
+        <th>{{ k }}</th>
+        <td>
+          {% if v is iterable and not v is string %}
+            {{ v | join(', ') }}
+          {% else %}
+            {{ v }}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
 
-<h2>Park Entry Form Details</h2>
-
-<table>
-  <tr><th>ID</th><td>{{ record[0] }}</td></tr>
-  <tr><th>Category</th><td>{{ record[1] }}</td></tr>
-  <tr><th>Date Submitted</th><td>{{ record[3] }}</td></tr>
-
-  {% for k, v in record_data.items() %}
-  <tr>
-    <th>{{ k }}</th>
-    <td>{{ v }}</td>
-  </tr>
-  {% endfor %}
-
-</table>
-
-<button class="print-btn" onclick="printPage()">Print</button>
-
+    <div class="no-print" style="margin-top:12px;">
+      <button class="print-btn" onclick="window.print()">Print</button>
+      <a href="/admin">Back</a>
+    </div>
+  </div>
 </body>
 </html>

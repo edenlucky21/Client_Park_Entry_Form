@@ -3,31 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin - Park Entry Records</title>
+  <link rel="stylesheet" href="/static/style.css">
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #aaa; padding: 8px; text-align: left; }
-    th { background-color: #0b6623; color: white; }
-    tr:nth-child(even) { background-color: #f2f2f2; }
+    /* Optional small improvements */
+    #recordsTable tbody tr:hover { background-color: #f0f0f0; }
+    .stats-card { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    .btn { margin: 0 5px; padding: 5px 10px; cursor: pointer; }
+    .admin-controls input, .admin-controls select { margin: 0 5px; }
   </style>
 </head>
 <body>
-  <h2>Park Entry Submitted Forms</h2>
-  <table>
-    <tr>
-      <th>ID</th>
-      <th>Category</th>
-      <th>Date Submitted</th>
-      <th>Action</th>
-    </tr>
-    {% for r in records %}
-    <tr>
-      <td>{{ r[0] }}</td>
-      <td>{{ r[1] }}</td>
-      <td>{{ r[2] }}</td>
-      <td><a href="/view/{{ r[0] }}" target="_blank">View/Print</a></td>
-    </tr>
-    {% endfor %}
-  </table>
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+
+    <div class="admin-controls">
+      <input type="text" id="searchQ" placeholder="Search name, nationality, etc">
+      <select id="filterType">
+        <option value="">All Visitor Types</option>
+        <option value="FNR">FNR</option>
+        <option value="FR">FR</option>
+        <option value="ROA">ROA</option>
+        <option value="EAC">EAC</option>
+        <option value="CHILD">CHILD</option>
+      </select>
+      <label>From <input type="date" id="fromDate"></label>
+      <label>To <input type="date" id="toDate"></label>
+      <button id="btnSearch" class="btn">Search</button>
+      <button id="btnExport" class="btn">Export CSV</button>
+      <button id="btnStats" class="btn">Load Stats</button>
+      <button id="btnRefresh" class="btn">Refresh</button>
+    </div>
+
+    <div id="statsArea" class="stats-card">
+      Click "Load Stats" to fetch visitor summaries.
+    </div>
+
+    <table id="recordsTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Category</th>
+          <th>Visitor Type</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r[0] }}</td>
+          <td>{{ r[1] or '-' }}</td>
+          <td>{{ r[2] or '-' }}</td>
+          <td>{{ r[3] }}</td>
+          <td><a href="/view/{{ r[0] }}" target="_blank">View / Print</a></td>
+        </tr>
+        {% endfor %}
+        {% if records|length == 0 %}
+        <tr>
+          <td colspan="5" style="text-align:center;">No records found</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    <p><a href="/">Back to Form</a></p>
+  </div>
+
+  <script>
+    // Fetch stats and display in stats area
+    async function fetchStats() {
+      try {
+        const res = await fetch('/stats');
+        const d = await res.json();
+        const el = document.getElementById('statsArea');
+        el.innerHTML = `
+          <div><strong>By Visitor Type</strong><br>
+            ${Object.entries(d.by_type).map(([key, val]) => <div>${key}: ${val}</div>).join('')}
+          </div>
+          <div style="margin-top:8px;"><strong>By Period</strong><br>
+            ${Object.entries(d.by_period).map(([key, val]) => <div>${key}: ${val}</div>).join('')}
+          </div>`;
+      } catch(err) {
+        alert("Failed to fetch stats");
+        console.error(err);
+      }
+    }
+
+    document.getElementById('btnStats').addEventListener('click', fetchStats);
+    document.getElementById('btnRefresh').addEventListener('click', () => location.reload());
+    document.getElementById('btnExport').addEventListener('click', () => window.location.href='/export_csv');
+
+    // Search functionality
+    document.getElementById('btnSearch').addEventListener('click', async () => {
+      const q = document.getElementById('searchQ').value.trim();
+      const type = document.getElementById('filterType').value;
+      const from = document.getElementById('fromDate').value;
+      const to = document.getElementById('toDate').value;
+
+      if (from && to && from > to) {
+        alert("From date cannot be after To date");
+        return;
+      }
+
+      const params = new URLSearchParams({ q, type, from, to });
+      try {
+        const res = await fetch('/search?' + params.toString());
+        const rows = await res.json();
+        const tbody = document.querySelector('#recordsTable tbody');
+        tbody.innerHTML = '';
+
+        if (rows.length === 0) {
+          tbody.innerHTML = <tr><td colspan="5" style="text-align:center;">No records found</td></tr>;
+          return;
+        }
+
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.id}</td>
+            <td>${r.form_type || '-'}</td>
+            <td>${r.visitor_type || '-'}</td>
+            <td>${r.date_submitted}</td>
+            <td><a href="/view/${r.id}" target="_blank">View / Print</a></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch(err) {
+        alert("Search failed");
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>
