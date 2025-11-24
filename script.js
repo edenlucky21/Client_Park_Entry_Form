@@ -15,19 +15,24 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function showSection() {
-  const type = document.getElementById("visitorType").value;
-  const tourist = document.getElementById("touristForm");
-  const transit = document.getElementById("transitForm");
-  const student = document.getElementById("studentForm");
+const visitorType = document.getElementById("visitorType");
+const touristForm = document.getElementById("touristForm");
+const transitForm = document.getElementById("transitForm");
+const studentForm = document.getElementById("studentForm");
 
-  tourist.classList.add("hidden");
-  transit.classList.add("hidden");
-  student.classList.add("hidden");
+visitorType.addEventListener("change", () => {
+  touristForm.classList.add("hidden");
+  transitForm.classList.add("hidden");
+  studentForm.classList.add("hidden");
 
-  if (type === "tourist") tourist.classList.remove("hidden");
-  if (type === "transit") transit.classList.remove("hidden");
-  if (type === "student") student.classList.remove("hidden");
-
+  if (visitorType.value === "tourist") {
+    touristForm.classList.remove("hidden");
+  } else if (visitorType.value === "transit") {
+    transitForm.classList.remove("hidden");
+  } else if (visitorType.value === "student") {
+    studentForm.classList.remove("hidden");
+  }
+});
   // refresh countries when a form becomes visible
   loadCountries();
 }

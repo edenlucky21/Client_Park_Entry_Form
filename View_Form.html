@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submitted Form Details</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { color: #0b6623; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #aaa; padding: 8px; }
+    th { background: #0b6623; color: white; }
+    .print-btn {
+        padding: 10px 20px;
+        background: #0b6623;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+  </style>
+  <script>
+    function printPage() {
+        window.print();
+    }
+  </script>
+</head>
+<body>
+
+<h2>Park Entry Form Details</h2>
+
+<table>
+  <tr><th>ID</th><td>{{ record[0] }}</td></tr>
+  <tr><th>Category</th><td>{{ record[1] }}</td></tr>
+  <tr><th>Date Submitted</th><td>{{ record[3] }}</td></tr>
+
+  {% for k, v in record_data.items() %}
+  <tr>
+    <th>{{ k }}</th>
+    <td>{{ v }}</td>
+  </tr>
+  {% endfor %}
+
+</table>
+
+<button class="print-btn" onclick="printPage()">Print</button>
+
+</body>
+</html>
