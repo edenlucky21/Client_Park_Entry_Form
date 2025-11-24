@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin - Park Entry Records</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="style.css">
   <style>
     /* Optional small improvements */
     #recordsTable tbody tr:hover { background-color: #f0f0f0; }
@@ -55,7 +55,7 @@
           <td>{{ r[1] or '-' }}</td>
           <td>{{ r[2] or '-' }}</td>
           <td>{{ r[3] }}</td>
-          <td><a href="/view/{{ r[0] }}" target="_blank">View / Print</a></td>
+          <td><a href="View_Form.html" target="_blank">View / Print</a></td>
         </tr>
         {% endfor %}
         {% if records|length == 0 %}

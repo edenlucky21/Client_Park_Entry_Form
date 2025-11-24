@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <title>Park Entry Form</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="style.css" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
   <div class="container">
     <div class="logo-container">
-      <img src="/static/UWA.png" alt="UWA" class="uwa-logo" />
+      <img src="UWA.png" alt="UWA" class="uwa-logo" />
       <h1>UGANDA WILDLIFE AUTHORITY</h1>
       <h2>Park Entry Registration</h2>
     </div>
@@ -23,7 +23,7 @@
     </select>
 
     <!-- TOURIST FORM -->
-    <form id="touristForm" class="hidden form-card" action="/submit_form" method="POST" enctype="multipart/form-data">
+    <form id="touristForm" class="hidden form-card" action="submit_form" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="form_type" value="tourist" />
       <h3>Tourist Information</h3>
 
@@ -75,7 +75,7 @@
     </form>
 
     <!-- TRANSIT FORM -->
-    <form id="transitForm" class="hidden form-card" action="/submit_form" method="POST">
+    <form id="transitForm" class="hidden form-card" action="submit_form" method="POST">
       <input type="hidden" name="form_type" value="transit" />
       <h3>Transit Visitor Information</h3>
       <label>Full Name:</label><input type="text" name="transit_name" required />
@@ -99,7 +99,7 @@
     </form>
 
     <!-- STUDENT FORM -->
-    <form id="studentForm" class="hidden form-card" action="/submit_form" method="POST">
+    <form id="studentForm" class="hidden form-card" action="submit_form" method="POST">
       <input type="hidden" name="form_type" value="student" />
       <h3>Student Visitor Information</h3>
       <label>School Name:</label><input type="text" name="student_name" required />
@@ -118,13 +118,13 @@
       <select id="student_nationality" name="nationality" class="nationality-dropdown" required>
         <option value="">--Select Nationality--</option>
       </select>
-      
+
       <button type="submit" class="submitBtn">Submit</button>
     </form>
 
-    <p class="admin-link"><a href="/admin" target="_blank">Open Admin Dashboard</a></p>
+    <p class="admin-link"><a href="admin" target="_blank">Open Admin Dashboard</a></p>
   </div>
 
-  <script src="/static/script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
