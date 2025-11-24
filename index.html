@@ -14,13 +14,39 @@
       <h2>Park Entry Registration</h2>
     </div>
 
-    <label for="visitorType"><b>Select Visitor Category:</b></label>
-    <select id="visitorType">
-      <option value="">-- Choose Option --</option>
-      <option value="tourist">Tourist</option>
-      <option value="transit">Transit</option>
-      <option value="student">Student</option>
-    </select>
+    <label>Select Category:</label>
+<select id="categorySelect">
+  <option value="">--Select--</option>
+  <option value="tourist">Tourist</option>
+  <option value="transit">Transit</option>
+  <option value="student">Student</option>
+</select>
+
+<div id="touristForm" class="form-section">Tourist Form Here</div>
+<div id="transitForm" class="form-section">Transit Form Here</div>
+<div id="studentForm" class="form-section">Student Form Here</div>
+
+<style>
+  .form-section { display: none; }
+  .form-section.active { display: block; }
+</style>
+
+<script>
+  const select = document.getElementById('categorySelect');
+  const forms = {
+    tourist: document.getElementById('touristForm'),
+    transit: document.getElementById('transitForm'),
+    student: document.getElementById('studentForm')
+  };
+
+  select.addEventListener('change', () => {
+    const value = select.value;
+    // Hide all forms
+    Object.values(forms).forEach(f => f.classList.remove('active'));
+    // Show selected form
+    if(forms[value]) forms[value].classList.add('active');
+  });
+</script>
 
     <!-- TOURIST FORM -->
     <form id="touristForm" class="hidden form-card" action="submit_form" method="POST" enctype="multipart/form-data">
