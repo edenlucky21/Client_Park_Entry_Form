@@ -12,7 +12,7 @@ body{font-family:system-ui,Arial,Helvetica,sans-serif;background:var(--uwa-light
 .uwa-logo{height:60px;display:block;margin:0 auto 6px;}
 h1{margin:0;color:var(--uwa-green)}
 h2{margin:4px 0 12px;font-weight:600;color:var(--muted)}
-label{display:block;margin-top:8px;font-size:14px}
+label{display:block;margin-top:8px;fot-size:14px}
 input[type="text"], input[type="tel"], select, input[type="date"]{padding:8px;border:1px solid #ddd;border-radius:6px;width:100%;max-width:420px}
 .form-card{padding:12px;border-radius:8px;border:1px solid #eee;margin-top:12px;background:#fff}
 .btn{background:var(--uwa-green);color:#fff;padding:8px 12px;border:none;border-radius:6px;cursor:pointer}
