@@ -10,7 +10,6 @@ A professional Django-based park entry registration system for managing tourist,
 - ✅ CSV export functionality
 - ✅ PDF generation for submissions
 - ✅ Statistics and analytics
-- ✅ Production-ready with PostgreSQL support
 
 ## Local Development
 
@@ -40,14 +39,8 @@ python manage.py runserver
 
 ### Access
 - **Form**: http://127.0.0.1:8000/
-- **Admin Dashboard**: http://127.0.0.1:8000/admin/
+- **Admin Dashboard**: http://127.0.0.1:8000/dashboard/
 - **Django Admin**: http://127.0.0.1:8000/admin/ (superuser login)
-
-## Production Deployment
-
-### Railway (Recommended)
-
-1. **Sign up**: Go to [Railway.app](https://railway.app) and create an account
 2. **Connect GitHub**: Link your GitHub repository
 3. **Deploy**: Railway will automatically detect Django and deploy
 4. **Database**: Railway provides PostgreSQL automatically
