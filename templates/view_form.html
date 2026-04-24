@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Park Entry Form Details - ID {{ form_entry.id }}</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  {% load static %}
+  <style>
+    @media print { .no-print { display: none; } }
+    .print-btn { background:#0b6623; color:white; padding:8px 12px; border:none; cursor:pointer; }
+    .form-details { margin: 20px 0; }
+    .form-details table { width: 100%; border-collapse: collapse; }
+    .form-details th, .form-details td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+    .form-details th { background-color: #f2f2f2; width: 30%; }
+    .json-data { font-family: monospace; font-size: 12px; background: #f9f9f9; padding: 10px; margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Park Entry Form Details</h2>
+
+    <div class="form-details">
+      <table>
+        <tr><th>ID</th><td>{{ form_entry.id }}</td></tr>
+        <tr><th>Form Type</th><td>{{ form_entry.get_form_type_display }}</td></tr>
+        <tr><th>Visitor Type</th><td>{{ form_entry.get_visitor_type_display }}</td></tr>
+        <tr><th>Date Submitted</th><td>{{ form_entry.date_submitted|date:"F d, Y \a\t H:i" }}</td></tr>
+      </table>
+    </div>
+
+    <h3>Form Data</h3>
+    {% for key, value in form_entry.data.items %}
+    <div class="form-details">
+      <table>
+        <tr>
+          <th>{{ key|title }}</th>
+          <td>
+            {% if value|length > 0 and value.0.name %}
+              <!-- Handle clients array -->
+              <ul>
+                {% for client in value %}
+                <li>
+                  <strong>Name:</strong> {{ client.name }}<br>
+                  <strong>Contact:</strong> {{ client.contact }}<br>
+                  {% if client.nationality %}<strong>Nationality:</strong> {{ client.nationality }}{% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+            {% elif value|length > 0 and value.0.type %}
+              <!-- Handle vehicles array -->
+              <ul>
+                {% for vehicle in value %}
+                <li>
+                  {% if vehicle.type %}<strong>Type:</strong> {{ vehicle.type }}<br>{% endif %}
+                  {% if vehicle.reg %}<strong>Registration:</strong> {{ vehicle.reg }}<br>{% endif %}
+                  {% if vehicle.driver_name %}<strong>Driver:</strong> {{ vehicle.driver_name }}<br>{% endif %}
+                  {% if vehicle.driver_phone %}<strong>Driver Phone:</strong> {{ vehicle.driver_phone }}{% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+            {% elif value is iterable and value|length > 0 %}
+              <!-- Handle other arrays (like activities) -->
+              {{ value|join:", " }}
+            {% else %}
+              <!-- Handle single values -->
+              {{ value }}
+            {% endif %}
+          </td>
+        </tr>
+      </table>
+    </div>
+    {% endfor %}
+
+    <div class="no-print" style="margin-top:20px;">
+      <button class="print-btn" onclick="window.print()">Print Form</button>
+      <a href="{% url 'park_forms:admin_dashboard' %}" style="margin-left: 10px;">Back to Admin</a>
+    </div>
+  </div>
+</body>
+</html>
