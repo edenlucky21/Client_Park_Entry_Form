@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uganda Wildlife Authority - Park Entry System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0b6623 0%, #084c1a 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: #0b6623;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: white;
+    }
+
+    h1 {
+      color: #0b6623;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .description {
+      color: #555;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #0b6623;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #084c1a;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(11, 102, 35, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #0b6623;
+      border: 2px solid #0b6623;
+    }
+
+    .btn-secondary:hover {
+      background: #0b6623;
+      color: white;
+    }
+
+    .info-box {
+      background: #f9f9f9;
+      border-left: 4px solid #0b6623;
+      padding: 15px;
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .info-box h3 {
+      color: #0b6623;
+      margin-bottom: 10px;
+    }
+
+    .info-box ul {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .info-box li {
+      color: #555;
+      padding: 5px 0;
+      font-size: 14px;
+    }
+
+    .status {
+      margin-top: 30px;
+      padding: 15px;
+      background: #e8f5e9;
+      border-radius: 5px;
+      color: #2e7d32;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🦁</div>
+    <h1>Uganda Wildlife Authority</h1>
+    <p class="subtitle">Park Entry Registration System</p>
+
+    <p class="description">
+      Welcome to the park entry registration system. Submit tourist, transit, or student visitor information and access real-time admin dashboards.
+    </p>
+
+    <div class="button-group">
+      <a href="http://localhost:5000/" class="btn btn-primary">📝 Submit Form (Local)</a>
+      <a href="http://localhost:5000/admin" class="btn btn-primary">📊 View Admin Dashboard (Local)</a>
+      
+      <!-- These will be active once deployed -->
+      <!-- <a href="https://park-entry-form.onrender.com/" class="btn btn-primary">📝 Submit Form (Online)</a> -->
+      <!-- <a href="https://park-entry-form.onrender.com/admin" class="btn btn-primary">📊 View Admin Dashboard (Online)</a> -->
+    </div>
+
+    <div class="info-box">
+      <h3>📋 System Features:</h3>
+      <ul>
+        <li>✓ Tourist, Transit, and Student form support</li>
+        <li>✓ Multi-client and vehicle entry</li>
+        <li>✓ Real-time admin dashboard</li>
+        <li>✓ CSV export functionality</li>
+        <li>✓ PDF generation for submissions</li>
+        <li>✓ Search and filter records</li>
+        <li>✓ Visitor statistics by type and period</li>
+      </ul>
+    </div>
+
+    <div class="status">
+      <strong>Note:</strong> The form is currently accessible locally on your machine. For online access, the Flask application must be deployed to a hosting platform (Render, Railway, PythonAnywhere, etc.).
+    </div>
+
+    <div class="info-box" style="margin-top: 20px; background: #fff3e0; border-left-color: #f57c00;">
+      <h3>🚀 Want to Deploy Online?</h3>
+      <ul>
+        <li>Visit <a href="https://render.com" target="_blank" style="color: #f57c00;">Render.com</a> and connect your GitHub repository</li>
+        <li>Set Build Command: <code>pip install -r requirements.txt</code></li>
+        <li>Set Start Command: <code>gunicorn app:app</code></li>
+        <li>Once deployed, update the online links in this page</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
