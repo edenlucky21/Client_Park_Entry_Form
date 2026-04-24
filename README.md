@@ -1,6 +1,6 @@
 # Uganda Wildlife Authority - Park Entry System
 
-A professional Django-based park entry registration system for managing tourist, transit, and student visitor information.
+A Flask-based park entry registration system for managing tourist, transit, and student visitor information.
 
 ## Features
 
@@ -26,21 +26,14 @@ cd Client_Park_Entry_Form
 # Install dependencies
 pip install -r requirements.txt
 
-# Run migrations
-python manage.py makemigrations
-python manage.py migrate
-
-# Create superuser
-python manage.py createsuperuser
-
-# Run development server
-python manage.py runserver
+# Run the Flask application
+python app.py
 ```
 
 ### Access
-- **Form**: http://127.0.0.1:8000/
-- **Admin Dashboard**: http://127.0.0.1:8000/dashboard/
-- **Django Admin**: http://127.0.0.1:8000/admin/ (superuser login)
+- **Form**: http://127.0.0.1:5000/
+- **Admin Dashboard**: http://127.0.0.1:5000/admin
+- **API Stats**: http://127.0.0.1:5000/stats
 2. **Connect GitHub**: Link your GitHub repository
 3. **Deploy**: Railway will automatically detect Django and deploy
 4. **Database**: Railway provides PostgreSQL automatically
