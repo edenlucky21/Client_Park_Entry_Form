@@ -1,20 +1,5 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-  const visitorType = document.getElementById("visitorType");
-  const touristForm = document.getElementById("touristForm");
-  const transitForm = document.getElementById("transitForm");
-  const studentForm = document.getElementById("studentForm");
-
-  // ---------- CATEGORY SWITCH ----------
-  if (visitorType) {
-    visitorType.addEventListener("change", () => {
-      [touristForm, transitForm, studentForm].forEach(f => f.classList.add("hidden"));
-      if (visitorType.value === "tourist") touristForm.classList.remove("hidden");
-      if (visitorType.value === "transit") transitForm.classList.remove("hidden");
-      if (visitorType.value === "student") studentForm.classList.remove("hidden");
-    });
-  }
-
   // ---------- COUNTRIES LIST ----------
   const countries = [
     "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia",
@@ -58,9 +43,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ---------- INITIAL FILL FOR ALL STATIC DROPDOWNS ----------
-  document.querySelectorAll(".nationality-dropdown")
-    .forEach(drop => populateCountriesFor(drop));
+  // ---------- POPULATE ALL CURRENT NATIONALITY DROPDOWNS ----------
+  document.querySelectorAll(".nationality-dropdown").forEach(drop => {
+    populateCountriesFor(drop);
+  });
+
+  // ---------- CATEGORY SWITCH ----------
+  const categorySelect = document.getElementById("categorySelect");
+  const touristForm = document.getElementById("touristForm");
+  const transitForm = document.getElementById("transitForm");
+  const studentForm = document.getElementById("studentForm");
+
+  if (categorySelect) {
+    categorySelect.addEventListener("change", () => {
+      [touristForm, transitForm, studentForm].forEach(f => f.classList.remove("active"));
+      const value = categorySelect.value;
+      if (value === "tourist" && touristForm) touristForm.classList.add("active");
+      if (value === "transit" && transitForm) transitForm.classList.add("active");
+      if (value === "student" && studentForm) studentForm.classList.add("active");
+    });
+  }
+
 
   // ---------- DYNAMIC CLIENTS ----------
   let clientCount = 1;
@@ -78,9 +81,21 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     document.getElementById("clientList").appendChild(div);
-
     populateCountriesFor(div.querySelector(".nationality-dropdown"));
   });
+
+  // ---------- POPULATE TRANSIT FORM ----------
+  const transitNationality = document.querySelector("#transitForm .nationality-dropdown");
+  if (transitNationality) {
+    populateCountriesFor(transitNationality);
+  }
+
+  // ---------- POPULATE STUDENT FORM ----------
+  const studentNationality = document.querySelector("#studentForm .nationality-dropdown");
+  if (studentNationality) {
+    populateCountriesFor(studentNationality);
+  }
+
 
   // ---------- DYNAMIC VEHICLES ----------
   let vehicleCount = 1;
