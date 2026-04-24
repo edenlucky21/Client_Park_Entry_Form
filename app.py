@@ -6,8 +6,10 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from pathlib import Path
 
+import os
+
 DB = "database.db"
-app = Flask(_name_, template_folder="templates", static_folder="static")
+app = Flask(__name__, template_folder=os.path.dirname(os.path.abspath(__file__)), static_folder=os.path.dirname(os.path.abspath(__file__)))
 CORS(app)
 
 def init_db():
@@ -254,5 +256,5 @@ def search():
     conn.close()
     return jsonify(results)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

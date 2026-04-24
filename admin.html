@@ -55,7 +55,7 @@
           <td>{{ r[1] or '-' }}</td>
           <td>{{ r[2] or '-' }}</td>
           <td>{{ r[3] }}</td>
-          <td><a href="View_Form.html" target="_blank">View / Print</a></td>
+          <td><a href="/view/{{ r[0] }}" target="_blank">View / Print</a></td>
         </tr>
         {% endfor %}
         {% if records|length == 0 %}
@@ -78,10 +78,10 @@
         const el = document.getElementById('statsArea');
         el.innerHTML = `
           <div><strong>By Visitor Type</strong><br>
-            ${Object.entries(d.by_type).map(([key, val]) => <div>${key}: ${val}</div>).join('')}
+            ${Object.entries(d.by_type).map(([key, val]) => '<div>' + key + ': ' + val + '</div>').join('')}
           </div>
           <div style="margin-top:8px;"><strong>By Period</strong><br>
-            ${Object.entries(d.by_period).map(([key, val]) => <div>${key}: ${val}</div>).join('')}
+            ${Object.entries(d.by_period).map(([key, val]) => '<div>' + key + ': ' + val + '</div>').join('')}
           </div>`;
       } catch(err) {
         alert("Failed to fetch stats");
@@ -113,7 +113,7 @@
         tbody.innerHTML = '';
 
         if (rows.length === 0) {
-          tbody.innerHTML = <tr><td colspan="5" style="text-align:center;">No records found</td></tr>;
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No records found</td></tr>';
           return;
         }
 

@@ -31,7 +31,7 @@
     </style>
 
     <!-- TOURIST FORM -->
-    <form id="touristForm" class="form-section" action="https://formsubmit.co/your@email.com" method="POST" enctype="multipart/form-data">
+    <form id="touristForm" class="form-section" action="/submit_form" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="form_type" value="tourist" />
       <h3>Tourist Information</h3>
 
@@ -84,7 +84,7 @@
     </form>
 
     <!-- TRANSIT FORM -->
-    <form id="transitForm" class="form-section" action="https://formsubmit.co/edenlucky21@gmail.com" method="POST">
+    <form id="transitForm" class="form-section" action="/submit_form" method="POST">
       <input type="hidden" name="form_type" value="transit" />
       <h3>Transit Visitor Information</h3>
 
@@ -111,7 +111,7 @@
     </form>
 
     <!-- STUDENT FORM -->
-    <form id="studentForm" class="form-section" action="https://formsubmit.co/your@email.com"  method="POST">
+    <form id="studentForm" class="form-section" action="/submit_form"  method="POST">
       <input type="hidden" name="form_type" value="student" />
       <h3>Student Visitor Information</h3>
 
@@ -157,7 +157,7 @@
       if (forms[value]) forms[value].classList.add('active');
     });
   </script>
-  <p class="admin-link"><a href="admin.html" target="_blank">Open Admin Dashboard</a></p>
+  <p class="admin-link"><a href="/admin" target="_blank">Open Admin Dashboard</a></p>
   </div>
 
   <script src="script.js"></script>
