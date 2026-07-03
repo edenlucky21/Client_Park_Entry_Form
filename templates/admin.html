@@ -2,74 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin - Park Entry Records</title>
-  <link rel="stylesheet" href="{% static 'style.css' %}">
-  {% load static %}
+  <title>Admin Dashboard - Park Entry Records</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <style>
-    /* Optional small improvements */
-    #recordsTable tbody tr:hover { background-color: #f0f0f0; }
-    .stats-card { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
-    .btn { margin: 0 5px; padding: 5px 10px; cursor: pointer; }
-    .admin-controls input, .admin-controls select { margin: 0 5px; }
-    .pagination { margin: 20px 0; text-align: center; }
-    .pagination a, .pagination span { margin: 0 5px; padding: 5px 10px; text-decoration: none; border: 1px solid #ddd; }
-    .pagination .current { background-color: #0b6623; color: white; }
+    .admin-header { margin-bottom: 20px; }
+    .stats-card { margin: 20px 0; padding: 15px; border: 1px solid #cde5cd; border-radius: 8px; background: #f8fdf8; }
+    .btn { margin: 0 5px 10px 0; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Admin Dashboard - Park Entry Records</h2>
-
-    <div class="admin-controls">
-      <form method="GET" action="{% url 'park_forms:admin_dashboard' %}">
-        <input type="text" name="q" value="{{ search_query }}" placeholder="Search name, nationality, etc">
-        <select name="visitor_type">
-          <option value="">All Visitor Types</option>
-          <option value="FNR" {% if visitor_type == 'FNR' %}selected{% endif %}>FNR</option>
-          <option value="FR" {% if visitor_type == 'FR' %}selected{% endif %}>FR</option>
-          <option value="ROA" {% if visitor_type == 'ROA' %}selected{% endif %}>ROA</option>
-          <option value="EAC" {% if visitor_type == 'EAC' %}selected{% endif %}>EAC</option>
-          <option value="CHILD" {% if visitor_type == 'CHILD' %}selected{% endif %}>CHILD</option>
-        </select>
-        <select name="form_type">
-          <option value="">All Form Types</option>
-          <option value="tourist" {% if form_type == 'tourist' %}selected{% endif %}>Tourist</option>
-          <option value="transit" {% if form_type == 'transit' %}selected{% endif %}>Transit</option>
-          <option value="student" {% if form_type == 'student' %}selected{% endif %}>Student</option>
-        </select>
-        <label>From <input type="date" name="from_date" value="{{ from_date }}"></label>
-        <label>To <input type="date" name="to_date" value="{{ to_date }}"></label>
-        <button type="submit" class="btn">Search</button>
-      </form>
-      <button id="btnExport" class="btn">Export CSV</button>
-      <button id="btnStats" class="btn">Load Stats</button>
-      <button id="btnRefresh" class="btn" onclick="location.reload()">Refresh</button>
+    <div class="admin-header">
+      <h2>Admin Dashboard - Park Entry Records</h2>
+      <p>Review all park entry registrations submitted through the system.</p>
     </div>
 
-    <div id="statsArea" class="stats-card">
-      Click "Load Stats" to fetch visitor summaries.
+    <div class="stats-card">
+      <strong>Records available:</strong> {{ records|length }}
     </div>
 
     <table id="recordsTable">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Category</th>
+          <th>Form Type</th>
           <th>Visitor Type</th>
-          <th>Date</th>
+          <th>Date Submitted</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {% for form in forms %}
+        {% for record in records %}
         <tr>
-          <td>{{ form.id }}</td>
-          <td>{{ form.get_form_type_display }}</td>
-          <td>{{ form.get_visitor_type_display }}</td>
-          <td>{{ form.date_submitted|date:"M d, Y H:i" }}</td>
-          <td><a href="{% url 'park_forms:view_form' form.id %}" target="_blank">View / Print</a></td>
+          <td>{{ record[0] }}</td>
+          <td>{{ record[1] or '—' }}</td>
+          <td>{{ record[2] or '—' }}</td>
+          <td>{{ record[3] or '—' }}</td>
+          <td>
+            <a href="{{ url_for('view_form', form_id=record[0]) }}" target="_blank">View / Print</a>
+            <br>
+            <a href="{{ url_for('download_pdf', form_id=record[0]) }}" target="_blank">Download PDF</a>
+          </td>
         </tr>
-        {% empty %}
+        {% else %}
         <tr>
           <td colspan="5" style="text-align:center;">No records found</td>
         </tr>
@@ -77,51 +52,7 @@
       </tbody>
     </table>
 
-    {% if forms.has_other_pages %}
-    <div class="pagination">
-      {% if forms.has_previous %}
-        <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if visitor_type %}visitor_type={{ visitor_type }}&{% endif %}{% if form_type %}form_type={{ form_type }}&{% endif %}{% if from_date %}from_date={{ from_date }}&{% endif %}{% if to_date %}to_date={{ to_date }}&{% endif %}page={{ forms.previous_page_number }}">Previous</a>
-      {% endif %}
-
-      {% for num in forms.paginator.page_range %}
-        {% if forms.number == num %}
-          <span class="current">{{ num }}</span>
-        {% elif num > forms.number|add:'-3' and num < forms.number|add:'3' %}
-          <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if visitor_type %}visitor_type={{ visitor_type }}&{% endif %}{% if form_type %}form_type={{ form_type }}&{% endif %}{% if from_date %}from_date={{ from_date }}&{% endif %}{% if to_date %}to_date={{ to_date }}&{% endif %}page={{ num }}">{{ num }}</a>
-        {% endif %}
-      {% endfor %}
-
-      {% if forms.has_next %}
-        <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if visitor_type %}visitor_type={{ visitor_type }}&{% endif %}{% if form_type %}form_type={{ form_type }}&{% endif %}{% if from_date %}from_date={{ from_date }}&{% endif %}{% if to_date %}to_date={{ to_date }}&{% endif %}page={{ forms.next_page_number }}">Next</a>
-      {% endif %}
-    </div>
-    {% endif %}
-
-    <p><a href="{% url 'park_forms:index' %}">Back to Form</a></p>
+    <p style="margin-top:20px;"><a href="{{ url_for('index') }}">Back to Form</a></p>
   </div>
-
-  <script>
-    // Fetch stats and display in stats area
-    async function fetchStats() {
-      try {
-        const res = await fetch('{% url "park_forms:stats_api" %}');
-        const d = await res.json();
-        const el = document.getElementById('statsArea');
-        el.innerHTML = `
-          <div><strong>By Visitor Type</strong><br>
-            ${Object.entries(d.by_type).map(([key, val]) => '<div>' + key + ': ' + val + '</div>').join('')}
-          </div>
-          <div style="margin-top:8px;"><strong>By Period</strong><br>
-            ${Object.entries(d.by_period).map(([key, val]) => '<div>' + key + ': ' + val + '</div>').join('')}
-          </div>`;
-      } catch(err) {
-        alert("Failed to fetch stats");
-        console.error(err);
-      }
-    }
-
-    document.getElementById('btnStats').addEventListener('click', fetchStats);
-    document.getElementById('btnExport').addEventListener('click', () => window.location.href='{% url "park_forms:export_csv" %}');
-  </script>
 </body>
 </html>

@@ -5,11 +5,15 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from pathlib import Path
+from generate_qr import generate_qr_code
 
 import os
 
 DB = "database.db"
-app = Flask(__name__, template_folder=os.path.dirname(os.path.abspath(__file__)), static_folder=os.path.dirname(os.path.abspath(__file__)))
+app = Flask(__name__, 
+            template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'),
+            static_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static'),
+            static_url_path='/static')
 CORS(app)
 
 def init_db():
@@ -152,10 +156,31 @@ def submit_form():
     # Persist
     form_id = save_form_to_db(form_type, visitor_type, payload)
 
-    # Generate PDF and return it (also used for printing)
-    pdf_buffer = generate_pdf_bytes(form_id, form_type, visitor_type, payload)
-    # Return PDF and instruct front-end to auto-open print (front-end handles printing)
-    return send_file(pdf_buffer, as_attachment=True, download_name=f"park_entry_{form_id}.pdf", mimetype="application/pdf")
+    # Return a success page with admin and printable links
+    success_html = f"""
+    <!doctype html>
+    <html>
+    <head>
+      <meta charset=\"utf-8\" />
+      <title>Form Submitted Successfully</title>
+      <style>
+        body {{ font-family: Arial, sans-serif; padding: 24px; }}
+        .box {{ max-width: 480px; margin: 40px auto; padding: 24px; border: 1px solid #cde5cd; border-radius: 10px; background: #f8fdf8; }}
+        a {{ display: inline-block; margin-top: 10px; margin-right: 10px; color: #0b6623; font-weight: 600; }}
+      </style>
+    </head>
+    <body>
+      <div class=\"box\">
+        <h2>Form submitted successfully</h2>
+        <p>Your record has been stored in the database.</p>
+        <p><strong>Record ID:</strong> {form_id}</p>
+        <a href=\"{url_for('view_form', form_id=form_id)}\">Open printable record</a>
+        <a href=\"{url_for('admin')}\">Open Admin Dashboard</a>
+      </div>
+    </body>
+    </html>
+    """
+    return success_html
 
 @app.route("/admin")
 def admin():
@@ -181,6 +206,22 @@ def view_form(form_id):
     except Exception:
         data = {"raw": record[3]}
     return render_template("view_form.html", record=record, record_data=data)
+
+@app.route("/pdf/<int:form_id>")
+def download_pdf(form_id):
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute("SELECT id, form_type, visitor_type, data, date_submitted FROM forms WHERE id=?", (form_id,))
+    record = c.fetchone()
+    conn.close()
+    if not record:
+        return "Not found", 404
+    try:
+        data = json.loads(record[3])
+    except Exception:
+        data = {"raw": record[3]}
+    pdf_buffer = generate_pdf_bytes(record[0], record[1], record[2], data)
+    return send_file(pdf_buffer, as_attachment=True, download_name=f"park_entry_{record[0]}.pdf", mimetype="application/pdf")
 
 @app.route("/stats")
 def stats():
@@ -255,6 +296,64 @@ def search():
             results.append({"id": r[0], "form_type": r[1], "visitor_type": r[2], "date_submitted": r[3]})
     conn.close()
     return jsonify(results)
+
+@app.route("/qr")
+def qr_display():
+    """Display the QR code as an HTML page"""
+    # Get the server's external IP for the QR code URL
+    # Use request.host to get the current host, fallback to network IP
+    server_url = request.host_url.rstrip('/')
+    return f"""
+    <!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8" />
+      <title>Park Entry Form - QR Code</title>
+      <style>
+        body {{ font-family: Arial, sans-serif; padding: 24px; background: #f0f0f0; }}
+        .container {{ max-width: 600px; margin: 0 auto; }}
+        .qr-box {{ background: white; padding: 40px; border-radius: 10px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }}
+        .qr-box h1 {{ color: #0b6623; margin-bottom: 10px; }}
+        .qr-box p {{ color: #666; margin-bottom: 30px; }}
+        .qr-box img {{ max-width: 400px; border: 3px solid #0b6623; border-radius: 8px; }}
+        .qr-url {{ margin-top: 20px; color: #0b6623; font-weight: bold; }}
+        .download-link {{ margin-top: 20px; }}
+        .download-link a {{ display: inline-block; padding: 12px 24px; background: #0b6623; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }}
+        .download-link a:hover {{ background: #084a1a; }}
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="qr-box">
+          <h1>🎫 Park Entry Form QR Code</h1>
+          <p>Scan this code with your mobile device to access the registration form</p>
+          <img src="{url_for('qr_image')}" alt="Park Entry Form QR Code" />
+          <div class="qr-url">
+            <p>Form URL: <br/>{server_url}</p>
+          </div>
+          <div class="download-link">
+            <a href="{url_for('qr_download')}">⬇️ Download QR Code (PNG)</a>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+    """
+
+@app.route("/qr.png")
+def qr_image():
+    """Serve the QR code as PNG image"""
+    # Get the current server URL
+    server_url = request.host_url.rstrip('/')
+    qr_buffer = generate_qr_code(server_url)
+    return send_file(qr_buffer, mimetype="image/png")
+
+@app.route("/qr/download")
+def qr_download():
+    """Download the QR code as PNG file"""
+    server_url = request.host_url.rstrip('/')
+    qr_buffer = generate_qr_code(server_url)
+    return send_file(qr_buffer, as_attachment=True, download_name="park_entry_form_qr.png", mimetype="image/png")
 
 if __name__ == "__main__":
     debug_mode = os.getenv("FLASK_DEBUG", "False").lower() == "true"
